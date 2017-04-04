@@ -15,3 +15,7 @@ func CreateInput(content string) (r Input) {
 func (input *Input) Current() byte {
     return input.content[input.position]
 }
+
+func (input *Input) Advance() {
+    input.position++
+}
