@@ -84,3 +84,11 @@ func TestMarkCommit(t *testing.T) {
 		t.Error("Mark issued an error in a valid situation")
 	}
 }
+
+func TestInvalidMark(t *testing.T) {
+	subject := CreateInput("someString")
+	err := subject.Commit()
+	if err == nil {
+		t.Errorf("Mark didn't fail properly without a previous mark: %s", err)
+	}
+}

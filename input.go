@@ -40,6 +40,9 @@ func (input *Input) Rollback() error {
 }
 
 func (input *Input) Commit() error {
+	if len(input.marks) == 0 {
+		return errors.New("no previous mark")
+	}
 	input.marks = input.marks[:len(input.marks)-1]
 	return nil
 }
