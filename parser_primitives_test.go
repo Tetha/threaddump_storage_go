@@ -25,3 +25,15 @@ func TestMatchStringFailsInWord(t *testing.T) {
 		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q",  parser.Current())
 	}
 }
+
+func TestMatchStringFailsAtEndOfString(t *testing.T) {
+	parser := CreateInput("someString")
+	matched := parser.MatchWord("someStringAndThenSome")
+	if matched {
+		t.Error("MatchWord didn't fail")
+	}
+
+	if parser.Current() != 's' {
+		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q", parser.Current())
+	}
+}
