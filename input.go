@@ -31,7 +31,7 @@ func (input *Input) Mark() {
 
 func (input *Input) Rollback() error {
 	if len(input.marks) == 0 {
-		return errors.New("No previous mark!")
+		return errors.New("no previous mark")
 	}
 	lastPosition := -1
 	lastPosition, input.marks = input.marks[len(input.marks)-1], input.marks[:len(input.marks)-1]
