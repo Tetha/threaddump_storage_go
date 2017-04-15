@@ -1,5 +1,7 @@
 package input
 
+import "errors"
+
 type Input struct {
     content string;
     position int;
@@ -12,10 +14,12 @@ func CreateInput(content string) (r Input) {
     return
 }
 
-func (input *Input) Current() byte {
-    return input.content[input.position]
+func (input *Input) Current() rune {
+    runeValue, width := utf8.DecodeRuneInString(input.content[input.position:])
+    return runeValue
 }
 
 func (input *Input) Advance() {
-    input.position++
+    runeValue, width := utf8.DecodeRuneInString(input.content[input.position:])
+    input.position += width
 }
