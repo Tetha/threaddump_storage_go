@@ -16,7 +16,7 @@ func TestCreateInput(t *testing.T) {
 func TestCurrent(t *testing.T) {
 	result := CreateInput("someString")
 	if result.Current() != 's' {
-		t.Errorf("Expected current char to be <s>, but was %s", result.Current())
+		t.Errorf("Expected current char to be <s>, but was %b", result.Current())
 	}
 }
 
@@ -25,7 +25,7 @@ func TestAdvance(t *testing.T) {
 	subject.Advance()
 	subject.Advance()
 	if subject.Current() != 'm' {
-		t.Errorf("Expect current to be <m>, but was %s", subject.Current())
+		t.Errorf("Expect current to be <m>, but was %b", subject.Current())
 	}
 }
 
