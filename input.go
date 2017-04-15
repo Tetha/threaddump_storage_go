@@ -1,6 +1,6 @@
 package input
 
-//import "errors"
+import "errors"
 import "unicode/utf8"
 
 type Input struct {
@@ -11,7 +11,7 @@ type Input struct {
 
 func CreateInput(content string) (r Input) {
     r = Input{content: content, position: 0}
-    r.marks = make([]int, 10)
+    r.marks = make([]int, 0, 10)
     return
 }
 
@@ -29,9 +29,12 @@ func (input *Input) Mark() {
     input.marks = append(input.marks, input.position)
 }
 
-func (input *Input) Rollback() (err error) {
+func (input *Input) Rollback() error {
+    if len(input.marks) == 0 {
+        return errors.New("No previous mark!")
+    }
     lastPosition := -1
     lastPosition, input.marks = input.marks[len(input.marks)-1], input.marks[:len(input.marks)-1]
     input.position = lastPosition
-    return
+    return nil
 }

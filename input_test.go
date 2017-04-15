@@ -52,3 +52,11 @@ func TestMarkRollback(t *testing.T) {
         t.Error("Rollback issued an error in a valid situation")
     }
 }
+
+func TestInvalidRollback(t *testing.T) {
+    subject := CreateInput("someString")
+    err := subject.Rollback()
+    if err == nil {
+        t.Errorf("Rollback didn't fail properly without a previous mark: %s", err)
+    }
+}
