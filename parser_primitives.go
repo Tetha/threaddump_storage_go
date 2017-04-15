@@ -1,4 +1,3 @@
-
 package input
 
 func (input *Input) MatchWord(word string) bool {

@@ -22,7 +22,7 @@ func TestMatchStringFailsInWord(t *testing.T) {
 	}
 
 	if parser.Current() != 's' {
-		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q",  parser.Current())
+		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q", parser.Current())
 	}
 }
 
