@@ -1,6 +1,7 @@
 package input
 
-import "errors"
+//import "errors"
+import "unicode/utf8"
 
 type Input struct {
     content string;
@@ -15,11 +16,22 @@ func CreateInput(content string) (r Input) {
 }
 
 func (input *Input) Current() rune {
-    runeValue, width := utf8.DecodeRuneInString(input.content[input.position:])
+    runeValue, _ := utf8.DecodeRuneInString(input.content[input.position:])
     return runeValue
 }
 
 func (input *Input) Advance() {
-    runeValue, width := utf8.DecodeRuneInString(input.content[input.position:])
+    _, width := utf8.DecodeRuneInString(input.content[input.position:])
     input.position += width
+}
+
+func (input *Input) Mark() {
+    input.marks = append(input.marks, input.position)
+}
+
+func (input *Input) Rollback() (err error) {
+    lastPosition := -1
+    lastPosition, input.marks = input.marks[len(input.marks)-1], input.marks[:len(input.marks)-1]
+    input.position = lastPosition
+    return
 }
