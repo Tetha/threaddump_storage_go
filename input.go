@@ -38,3 +38,8 @@ func (input *Input) Rollback() error {
 	input.position = lastPosition
 	return nil
 }
+
+func (input *Input) Commit() error {
+	input.marks = input.marks[:len(input.marks)-1]
+	return nil
+}

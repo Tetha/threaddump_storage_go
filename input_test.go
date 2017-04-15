@@ -60,3 +60,27 @@ func TestInvalidRollback(t *testing.T) {
 		t.Errorf("Rollback didn't fail properly without a previous mark: %s", err)
 	}
 }
+
+func TestMarkCommit(t *testing.T) {
+	subject := CreateInput("someString")
+	subject.Advance()
+	subject.Advance()
+	if subject.Current() != 'm' {
+		t.Errorf("Current is broken")
+	}
+
+	subject.Mark()
+	subject.Advance()
+	subject.Advance()
+	if subject.Current() != 'S' {
+		t.Errorf("Curent is broken")
+	}
+
+	err := subject.Commit()
+	if subject.Current() != 'S' {
+		t.Errorf("Expect Mark to stick to the position, but it rolled back to %b", subject.Current())
+	}
+	if err != nil {
+		t.Error("Mark issued an error in a valid situation")
+	}
+}
