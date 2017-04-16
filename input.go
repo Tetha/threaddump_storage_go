@@ -15,6 +15,10 @@ func CreateInput(content string) (r Input) {
 	return
 }
 
+func (input *Input) Length() int {
+	return len(input.content)
+}
+
 func (input *Input) Current() rune {
 	runeValue, _ := utf8.DecodeRuneInString(input.content[input.position:])
 	return runeValue

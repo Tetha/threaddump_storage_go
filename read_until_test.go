@@ -15,3 +15,14 @@ func TestReadUntilHappyCase(t *testing.T) {
 		t.Errorf("ReadUntil should place the input on the character to read until, but placed it on %q", parser.Current())
 	}
 }
+
+func TestReadUntilWithMissingStopChar(t *testing.T) {
+	parser := CreateInput("someString")
+	parsed, _ := parser.ReadUntil('(')
+	if parsed {
+		t.Error("ReadUntil should not parse without the end character")
+	}
+	if parser.Current() != 's' {
+		t.Errorf("ReadUntil should not advance the input, but advanced to %q", parser.Current())
+	}
+}
