@@ -33,5 +33,6 @@ func (input *Input) ParseWaitLine() (bool, StacktraceLine) {
 		return false, parseResult
 	}
 
+	parseResult.Type = WaitingLine
 	return true, parseResult
 }
