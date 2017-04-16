@@ -23,3 +23,14 @@ func TestDelimitedWordWithDelimitedWord(t *testing.T) {
 		t.Errorf("DelimitedWord should advance the input past the closing delimiter, but only advanced to %q", parser.Current())
 	}
 }
+
+func TestDelimitedWordWithoutEndLimiter(t *testing.T) {
+	parser := CreateInput("<someString")
+	parsed, _ := parser.DelimitedWord('<', '>')
+	if parsed {
+		t.Error("DelimitedWord cannot parse")
+	}
+	if parser.Current() != '<' {
+		t.Errorf("DelimitedWord should not advance the input  on error, but advanced to %q", parser.Current())
+	}
+}
