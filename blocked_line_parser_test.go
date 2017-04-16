@@ -25,3 +25,28 @@ func TestParseBlockedLineValidInput(t *testing.T) {
 		t.Errorf("Expected ParseBlockedLine to advance the cursor to the next line, but it got stuck on <%q>", parser.Current())
 	}
 }
+
+func TestActualInputRegression(t *testing.T) {
+	parser := CreateInput("\t- waiting to lock <0x00000000e0c5a010> (a org.apache.logging.log4j.core.appender.FileManager)\n$")
+	parsed, line := parser.ParseBlockedLine()
+
+	if !parsed {
+		t.Error("ParseBlockedLine didn't succeed on valid input")
+	}
+
+	if line.Type != BlockedLine {
+		t.Errorf("Expected type to be BlockedLine (%d), but was %d", BlockedLine, line.Type)
+	}
+
+	if line.LockAddress != "0x00000000e0c5a010" {
+		t.Errorf("Expected extracted lock address to be <0x00000000e0c5a010>, got <%s>", line.LockAddress)
+	}
+
+	if line.LockClass != "org.apache.logging.log4j.core.appender.FileManager" {
+		t.Errorf("Expected extracted lock class to be <org.apache.logging.log4j.core.appender.FileManager>, but got <%s>", line.LockClass)
+	}
+
+	if parser.Current() != '$' {
+		t.Errorf("Expected ParseBlockedLine to advance the cursor to the next line, but it got stuck on <%q>", parser.Current())
+	}
+}

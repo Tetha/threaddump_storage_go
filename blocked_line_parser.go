@@ -5,7 +5,7 @@ func (input *Input) ParseBlockedLine() (bool, StacktraceLine) {
 	var parsed = false
 
 	input.Mark()
-	if !input.MatchWord("\t- parking to wait for ") {
+	if !(input.MatchWord("\t- parking to wait for ") || input.MatchWord("\t- waiting to lock ")) {
 		input.Rollback()
 		return false, result
 	}
