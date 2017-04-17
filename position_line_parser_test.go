@@ -1,4 +1,4 @@
-package input;
+package input
 
 import "testing"
 
@@ -53,7 +53,6 @@ func TestNativePositionLine(t *testing.T) {
 	if line.Method != "park" {
 		t.Errorf("Expected ParseThreadPosition to extract Method <park> but got <%s>", line.Method)
 	}
-
 
 	if line.SourceFile != "Native Method" {
 		t.Errorf("Expected ParseThreadPosition to extract SourceFile <Native Method>, but got <%s>", line.SourceFile)
