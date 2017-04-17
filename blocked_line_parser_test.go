@@ -17,8 +17,8 @@ func TestParseBlockedLineValidInput(t *testing.T) {
 		t.Errorf("Expected extracted lock address to be <0x000000065be92a68>, got <%s>", line.LockAddress)
 	}
 
-	if line.LockClass != "java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject" {
-		t.Errorf("Expected extracted lock class to be <java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject>, but got <%s>", line.LockClass)
+	if line.Class != "java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject" {
+		t.Errorf("Expected extracted lock class to be <java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject>, but got <%s>", line.Class)
 	}
 
 	if parser.Current() != '$' {
@@ -42,8 +42,8 @@ func TestActualInputRegression(t *testing.T) {
 		t.Errorf("Expected extracted lock address to be <0x00000000e0c5a010>, got <%s>", line.LockAddress)
 	}
 
-	if line.LockClass != "org.apache.logging.log4j.core.appender.FileManager" {
-		t.Errorf("Expected extracted lock class to be <org.apache.logging.log4j.core.appender.FileManager>, but got <%s>", line.LockClass)
+	if line.Class != "org.apache.logging.log4j.core.appender.FileManager" {
+		t.Errorf("Expected extracted lock class to be <org.apache.logging.log4j.core.appender.FileManager>, but got <%s>", line.Class)
 	}
 
 	if parser.Current() != '$' {

@@ -17,7 +17,7 @@ func TestParseWaitLine(t *testing.T) {
 		t.Errorf("Lock address wasn't extracted properly, got: <%s>", line.LockAddress)
 	}
 
-	if line.LockClass != "java.lang.ref.ReferenceQueue$Lock" {
-		t.Errorf("Lock class wasn't extracted properly, got: <%s>", line.LockClass)
+	if line.Class != "java.lang.ref.ReferenceQueue$Lock" {
+		t.Errorf("Lock class wasn't extracted properly, got: <%s>", line.Class)
 	}
 }

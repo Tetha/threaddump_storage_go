@@ -21,7 +21,7 @@ func (input *Input) ParseWaitLine() (bool, StacktraceLine) {
 		return false, parseResult
 	}
 
-	parsed, parseResult.LockClass = input.ReadUntil(')')
+	parsed, parseResult.Class = input.ReadUntil(')')
 	if !parsed {
 		input.Rollback()
 		return false, parseResult

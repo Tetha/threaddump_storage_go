@@ -22,7 +22,7 @@ func (input *Input) ParseLockedLine() (success bool, result StacktraceLine) {
 		return
 	}
 
-	parsed, result.LockClass = input.ReadUntil(')')
+	parsed, result.Class = input.ReadUntil(')')
 	if !parsed {
 		input.Rollback()
 		return

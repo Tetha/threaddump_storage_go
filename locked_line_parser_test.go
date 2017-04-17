@@ -18,8 +18,8 @@ func TestParseLockLine(t *testing.T) {
 		t.Errorf("Expected ParseLockedLine to extract LockAddress: <0x00000000e0e97cb0>, but got <%s>", line.LockAddress)
 	}
 
-	if line.LockClass != "io.netty.channel.nio.SelectedSelectionKeySet" {
-		t.Errorf("Expeted ParseLockedLine to extract LockClass: io.netty.channel.nio.SelectedSelectionKeySet, but got <%s>", line.LockClass)
+	if line.Class != "io.netty.channel.nio.SelectedSelectionKeySet" {
+		t.Errorf("Expeted ParseLockedLine to extract Class: io.netty.channel.nio.SelectedSelectionKeySet, but got <%s>", line.Class)
 	}
 
 	if parser.Current() != '$' {

@@ -10,5 +10,5 @@ const (
 type StacktraceLine struct {
 	Type int
 	LockAddress string
-	LockClass string
+	Class string
 }
