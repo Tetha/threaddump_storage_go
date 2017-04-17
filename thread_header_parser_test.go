@@ -46,4 +46,7 @@ func TestParseThreadHeaderApplicationThread(t *testing.T) {
 	if header.ConditionAddress != "0x00007f63df77a000" {
 		t.Errorf("ParseThreadHeader did not extract the right ConditionAddress <0x00007f63df77a000>, but <%s>", header.ConditionAddress)
 	}
+	if parser.Current() != '$' {
+		t.Errorf("Expected parser to move the input past the line")
+	}
 }
