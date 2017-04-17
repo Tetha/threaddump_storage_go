@@ -18,12 +18,25 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 		return
 	}
 
+	tries := 0
 	input.Advance() // starting "
-	parsed, header.Name = input.ReadUntil('"')
-	if !parsed {
-		return
+	start := input.Position()
+	for tries < input.Length() + 10 {
+		tries++
+		parsed, _ = input.ReadUntil('"')
+		if !parsed {
+			return
+		}
+		input.Advance() // final "
+
+		// lookahead - always roll back
+		input.Mark()
+		if input.MatchWord(" #") || input.MatchWord(" prio=") || input.MatchWord(" os_prio=") {
+			input.Rollback()
+			header.Name = input.Slice(start, input.Position()-1)
+			break
+		}
 	}
-	input.Advance() // final "
 
 	// jvm internal threads don't have thread ids
 	if input.MatchWord(" #") {

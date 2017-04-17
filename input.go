@@ -15,6 +15,14 @@ func CreateInput(content string) (r Input) {
 	return
 }
 
+func (input *Input) Slice(start int, end int) string {
+	return input.content[start:end]
+}
+
+func (input *Input) Position() int {
+	return input.position
+}
+
 func (input *Input) Length() int {
 	return len(input.content)
 }

@@ -89,3 +89,17 @@ func TestParseThreadHeaderJvmThreads(t *testing.T) {
 		t.Errorf("Expected ParseThreadHeader to consume the entire line but it got stuck on %q", parser.Current())
 	}
 }
+
+func TestParseThreadHeaderThreadNameWithQuotes(t *testing.T) {
+	parser := CreateInput("\"elasticsearch[Samuel \"Starr\" Saxon][generic][T#446]\" #2315667 daemon prio=5 os_prio=0 tid=0x00007efa98010800 nid=0x7865 waiting on condition [0x00007efacf1b2000]\n$")
+
+	parsed, header := parser.ParseThreadHeader()
+
+	if !parsed {
+		t.Errorf("ParseThreadHeader has to succeeedon valid input")
+	}
+
+	if header.Name != "elasticsearch[Samuel \"Starr\" Saxon][generic][T#446]" {
+		t.Errorf("Expected ParseThreadHeader to extract thread name <elasticsearch[Samuel \"Starr\" Saxon][generic][T#446]>, but got <%s>", header.Name)
+	}
+}
