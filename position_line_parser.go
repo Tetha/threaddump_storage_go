@@ -29,15 +29,20 @@ func (input *Input) ParseThreadPosition() (success bool, result StacktraceLine) 
 		input.Rollback()
 		return
 	}
-	locationChunks := strings.Split(sourceLocation, ":")
-	result.SourceFile = locationChunks[0]
+	if sourceLocation == "Native Method" {
+		result.SourceFile = "Native Method"
+		result.SourceLine = -1
+	} else {
+		locationChunks := strings.Split(sourceLocation, ":")
+		result.SourceFile = locationChunks[0]
 
-	line, err := strconv.Atoi(locationChunks[1])
-	if err != nil {
-		input.Rollback()
-		return
+		line, err := strconv.Atoi(locationChunks[1])
+		if err != nil {
+			input.Rollback()
+			return
+		}
+		result.SourceLine = line
 	}
-	result.SourceLine = line
 
 	if !input.MatchWord("\n") {
 		input.Rollback()
