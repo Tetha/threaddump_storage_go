@@ -78,11 +78,11 @@ func TestParseThreadHeaderJvmThreads(t *testing.T) {
 	}
 
 	if header.Name != "VM Periodic Task Thread" {
-		t.Errorf("Expected ParseThreadHeader to extract the name <VM Periodic Task Thread>, but got %s", header.Name);
+		t.Errorf("Expected ParseThreadHeader to extract the name <VM Periodic Task Thread>, but got %s", header.Name)
 	}
 
 	if header.OsPrio != "0" {
-		t.Errorf("Expected ParseThreadHeader to extract the os_prio <0>, but got %s", header.OsPrio);
+		t.Errorf("Expected ParseThreadHeader to extract the os_prio <0>, but got %s", header.OsPrio)
 	}
 
 	if parser.Current() != '$' {
