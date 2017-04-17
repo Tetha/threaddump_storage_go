@@ -25,12 +25,12 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	}
 	input.Advance() // final "
 
-	if !input.MatchWord(" #") {
-		return
-	}
-	parsed, header.Id = input.ReadUntil(' ')
-	if !parsed {
-		return
+	// jvm internal threads don't have thread ids
+	if input.MatchWord(" #") {
+		parsed, header.Id = input.ReadUntil(' ')
+		if !parsed {
+			return
+		}
 	}
 	input.Advance() // skip space
 
@@ -39,6 +39,8 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	}
 
 	// Prio
+	// Prio is optional, e.g. internal threads don't have it
+	input.Mark()
 	parsed, word = input.ReadUntil(' ')
 	if !parsed {
 		return
@@ -46,10 +48,13 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	input.Advance()
 
 	chunks := strings.Split(word, "=")
-	if chunks[0] != "prio" {
-		return
+	if chunks[0] == "prio" {
+		input.Commit()
+		header.Prio = chunks[1]
+	} else {
+		// rollback so the os_prio starts right after ID/daemon
+		input.Rollback()
 	}
-	header.Prio = chunks[1]
 
 	// Os-Prio
 	parsed, word = input.ReadUntil(' ')

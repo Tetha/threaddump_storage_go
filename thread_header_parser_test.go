@@ -51,7 +51,7 @@ func TestParseThreadHeaderApplicationThread(t *testing.T) {
 	}
 }
 
-func TestParseThreadHeaderDaemoThread(t *testing.T) {
+func TestParseThreadHeaderDaemonThread(t *testing.T) {
 	parser := CreateInput("\"ping-JollyDolphin-repeating-task-watchdog\" #201 daemon prio=5 os_prio=0 tid=0x00007f6450040000 nid=0x4449 waiting on condition [0x00007f63e1798000]\n$")
 	parsed, header := parser.ParseThreadHeader()
 
@@ -65,5 +65,27 @@ func TestParseThreadHeaderDaemoThread(t *testing.T) {
 
 	if header.Prio != "5" {
 		t.Error("Expected ParseThreadHeader to parse the rest of the fields properly")
+	}
+}
+
+func TestParseThreadHeaderJvmThreads(t *testing.T) {
+	parser := CreateInput("\"VM Periodic Task Thread\" os_prio=0 tid=0x00007f6489288000 nid=0x41f8 waiting on condition\n$")
+
+	parsed, header := parser.ParseThreadHeader()
+
+	if !parsed {
+		t.Error("ParseThreadHeader should succeed with valid inputs")
+	}
+
+	if header.Name != "VM Periodic Task Thread" {
+		t.Errorf("Expected ParseThreadHeader to extract the name <VM Periodic Task Thread>, but got %s", header.Name);
+	}
+
+	if header.OsPrio != "0" {
+		t.Errorf("Expected ParseThreadHeader to extract the os_prio <0>, but got %s", header.OsPrio);
+	}
+
+	if parser.Current() != '$' {
+		t.Errorf("Expected ParseThreadHeader to consume the entire line but it got stuck on %q", parser.Current())
 	}
 }
