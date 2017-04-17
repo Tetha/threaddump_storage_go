@@ -1,38 +1,41 @@
 package input
 
-func (input *Input) ParseWaitLine() (bool, StacktraceLine) {
-	var parseResult StacktraceLine
+func (input *Input) ParseWaitLine() (success bool, result StacktraceLine) {
 	var parsed = false
 	input.Mark()
+	defer func() {
+		if success {
+			input.Commit()
+		} else {
+			input.Rollback()
+		}
+	}()
+
+	result.Type = WaitingLine
 	if !input.MatchWord("\t- waiting on ") {
-		input.Rollback()
-		return false, parseResult
+		return
 	}
 
-	parsed, parseResult.LockAddress = input.DelimitedWord('<', '>')
+	parsed, result.LockAddress = input.DelimitedWord('<', '>')
 	if !parsed {
-		input.Rollback()
-		return false, parseResult
+		return
 	}
 
 	parsed = input.MatchWord(" (a ")
 	if !parsed {
-		input.Rollback()
-		return false, parseResult
+		return
 	}
 
-	parsed, parseResult.Class = input.ReadUntil(')')
+	parsed, result.Class = input.ReadUntil(')')
 	if !parsed {
-		input.Rollback()
-		return false, parseResult
+		return
 	}
 
 	parsed = input.MatchWord(")\n")
 	if !parsed {
-		input.Rollback()
-		return false, parseResult
+		return
 	}
 
-	parseResult.Type = WaitingLine
-	return true, parseResult
+	success = true
+	return
 }
