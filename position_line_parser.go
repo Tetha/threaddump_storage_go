@@ -1,23 +1,29 @@
-package input;
+package input
 
 import "strings"
 import "strconv"
 
 func (input *Input) ParseThreadPosition() (success bool, result StacktraceLine) {
-	input.Mark()
 	var parsed = false
 	success = false
 
+	input.Mark()
+	defer func() {
+		if success {
+			input.Commit()
+		} else {
+			input.Rollback()
+		}
+	}()
+
 	result.Type = PositionLine
 	if !input.MatchWord("\tat ") {
-		input.Rollback()
 		return
 	}
 
 	var call string
 	parsed, call = input.ReadUntil('(')
 	if !parsed {
-		input.Rollback()
 		return
 	}
 	chunks := strings.Split(call, ".")
@@ -26,7 +32,6 @@ func (input *Input) ParseThreadPosition() (success bool, result StacktraceLine) 
 
 	parsed, sourceLocation := input.DelimitedWord('(', ')')
 	if !parsed {
-		input.Rollback()
 		return
 	}
 	if sourceLocation == "Native Method" {
@@ -38,18 +43,15 @@ func (input *Input) ParseThreadPosition() (success bool, result StacktraceLine) 
 
 		line, err := strconv.Atoi(locationChunks[1])
 		if err != nil {
-			input.Rollback()
 			return
 		}
 		result.SourceLine = line
 	}
 
 	if !input.MatchWord("\n") {
-		input.Rollback()
 		return
 	}
 
-	input.Commit()
 	success = true
 	return
 }
