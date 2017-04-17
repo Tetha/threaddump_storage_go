@@ -50,3 +50,20 @@ func TestParseThreadHeaderApplicationThread(t *testing.T) {
 		t.Errorf("Expected parser to move the input past the line")
 	}
 }
+
+func TestParseThreadHeaderDaemoThread(t *testing.T) {
+	parser := CreateInput("\"ping-JollyDolphin-repeating-task-watchdog\" #201 daemon prio=5 os_prio=0 tid=0x00007f6450040000 nid=0x4449 waiting on condition [0x00007f63e1798000]\n$")
+	parsed, header := parser.ParseThreadHeader()
+
+	if !parsed {
+		t.Error("Expected thread header parse to suceed on valid input")
+	}
+
+	if !header.IsDaemon {
+		t.Error("Expected ParseThreadHeader to mark DaemonThreads as daemons")
+	}
+
+	if header.Prio != "5" {
+		t.Error("Expected ParseThreadHeader to parse the rest of the fields properly")
+	}
+}

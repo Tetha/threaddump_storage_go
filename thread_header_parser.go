@@ -34,6 +34,10 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	}
 	input.Advance() // skip space
 
+	if input.MatchWord("daemon ") {
+		header.IsDaemon = true
+	}
+
 	// Prio
 	parsed, word = input.ReadUntil(' ')
 	if !parsed {
