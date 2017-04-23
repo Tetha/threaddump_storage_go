@@ -43,3 +43,8 @@ type Thread struct {
 	JavaStateDetail  string
 	Stacktrace       []StacktraceLine
 }
+
+type Threaddump struct {
+	Header  string
+	Threads []Thread
+}
