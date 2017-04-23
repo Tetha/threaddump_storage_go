@@ -40,5 +40,6 @@ type Thread struct {
 	ThreadState      string
 	ConditionAddress string
 	JavaState        string
+	JavaStateDetail  string
 	Stacktrace       []StacktraceLine
 }
