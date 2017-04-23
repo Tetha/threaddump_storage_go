@@ -28,3 +28,17 @@ type ThreadHeader struct {
 	ThreadState      string
 	ConditionAddress string
 }
+
+type Thread struct {
+	Name             string
+	Id               string
+	IsDaemon         bool
+	Prio             string
+	OsPrio           string
+	Tid              string
+	Nid              string
+	ThreadState      string
+	ConditionAddress string
+	JavaState        string
+	Stacktrace       []StacktraceLine
+}
