@@ -13,5 +13,53 @@ func (input *Input) ParseThread() (success bool, result Thread) {
 	if !parsed {
 		return
 	}
+	for {
+		lineParsed, line := input.parseStacktraceLine()
+		if lineParsed {
+			result.Stacktrace = append(result.Stacktrace, line)
+		} else {
+			break
+		}
+	}
+
+	if !input.MatchWord("\n") {
+		return
+	}
+	success = true
+	return
+}
+
+func (input *Input) parseStacktraceLine() (success bool, line StacktraceLine) {
+	input.Mark()
+	success, line = input.ParseWaitLine()
+	if success {
+		input.Commit()
+		return
+	}
+	input.Rollback()
+
+	input.Mark()
+	success, line = input.ParseBlockedLine()
+	if success {
+		input.Commit()
+		return
+	}
+	input.Rollback()
+
+	input.Mark()
+	success, line = input.ParseLockedLine()
+	if success {
+		input.Commit()
+		return
+	}
+	input.Rollback()
+
+	input.Mark()
+	success, line = input.ParseThreadPosition()
+	if (success) {
+		input.Commit()
+		return
+	}
+	input.Rollback()
 	return
 }
