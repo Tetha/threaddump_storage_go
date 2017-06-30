@@ -7,12 +7,54 @@ import (
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 
+	"encoding/json"
 	"net/http"
 	"goji.io"
 	"goji.io/pat"
+	"github.com/rs/cors"
 )
 
+type Threaddump struct {
+	Id int `json:"id"`
+	Application string `json:"application"`
+	Host string `json:"host"`
+	Uploaded time.Time `json:"uploaded"`
+}
+
+func listThreaddumps(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("sqlite3", "./threaddump.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT id, application, host, upload_time FROM threaddumps")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dumps := []Threaddump{}
+	for rows.Next() {
+		var dump Threaddump
+		err := rows.Scan(&dump.Id, &dump.Application, &dump.Host, &dump.Uploaded)
+		if (err != nil) {
+			log.Fatal(err)
+		}
+		dumps = append(dumps, dump)
+	}
+	encoder := json.NewEncoder(w)
+	encoder.Encode(dumps)
+}
+
 func main() {
+	mux := goji.NewMux()
+	mux.HandleFunc(pat.Get("/threaddumps"), listThreaddumps)
+
+  handler := cors.Default().Handler(mux)
+	http.ListenAndServe("localhost:8000", handler)
+}
+
+func sqliteTest() {
 	db, err := sql.Open("sqlite3", "./threaddump.db")
 	if err != nil {
 		log.Fatal(err)
