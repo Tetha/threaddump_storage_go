@@ -1,0 +1,18 @@
+<h1> Stored Dumps </h1>
+
+<table>
+    <tr>
+        <th>Host</th>
+        <th>Application</th>
+        <th>Uploaded</th>
+        <th>Link</th>
+    </tr>
+{{ range . }}
+    <tr>
+        <td>{{ .Host }}</td>
+        <td>{{ .Application }}</td>
+        <td>{{ .Uploaded }}</td>
+        <td><a href="/threads/{{ .ID }}">Inspect</a></td>
+    </tr>
+{{end}}
+</table>
