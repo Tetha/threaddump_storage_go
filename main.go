@@ -12,6 +12,7 @@ import (
 	"github.com/tetha/threaddumpstorage-go/upload"
 
 	"net/http"
+	"net/http/pprof"
 )
 
 type Threaddump struct {
@@ -53,11 +54,20 @@ type StacktraceLine struct {
 var templates = template.Must(template.ParseGlob("templates/*.html"))
 
 func main() {
-	http.HandleFunc("/upload", upload.HandleUpload)
-	http.HandleFunc("/threaddumps", listThreaddumps)
-	http.HandleFunc("/threads/", listThreads)
+	r := http.NewServeMux()
+
+	r.HandleFunc("/debug/pprof/", pprof.Index)
+	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+	r.HandleFunc("/upload", upload.HandleUpload)
+	r.HandleFunc("/threaddumps", listThreaddumps)
+	r.HandleFunc("/threads/", listThreads)
+
 	log.Print("Serving on 8080...")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
 func listThreads(w http.ResponseWriter, r *http.Request) {
