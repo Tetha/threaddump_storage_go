@@ -12,7 +12,7 @@ func (input *Input) ReadUntil(stop byte) (bool, string) {
 	var steps = 0
 	input.Mark()
 	for input.Current() != stop && steps < input.Length() {
-		word.WriteByte(input.Current())
+		//word.WriteByte(input.Current())
 		input.Advance()
 		steps++
 	}
@@ -21,6 +21,7 @@ func (input *Input) ReadUntil(stop byte) (bool, string) {
 		return false, ""
 	} else {
 		input.Commit()
+		return true, input.GetLastCharacters(steps)
 		return true, word.String()
 	}
 }

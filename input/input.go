@@ -34,6 +34,10 @@ func (input *Input) Current() byte {
 	}
 }
 
+func (input *Input) GetLastCharacters(n int) string {
+	return input.content[input.position-n : input.position]
+}
+
 func (input *Input) Advance() {
 	//_, width := utf8.DecodeRuneInString(input.content[input.position:])
 	input.position += 1
