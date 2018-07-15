@@ -1,7 +1,8 @@
 package input
 
-import(
+import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -13,7 +14,7 @@ func TestParseThreadStateRunning(t *testing.T) {
 	assert.True(parsed, "ParseThreadState should succeed on valid input")
 	assert.Equal("RUNNABLE", state)
 	assert.Equal("", clarification, "Runnable has no clarification")
-	assert.Equal('$', parser.Current(), "ParseThreadState should consume the entire input")
+	assert.Equal(byte('$'), parser.Current(), "ParseThreadState should consume the entire input")
 }
 
 func TestParseThreadStateWaiting(t *testing.T) {
@@ -24,5 +25,5 @@ func TestParseThreadStateWaiting(t *testing.T) {
 	assert.True(parsed, "ParseThreadState should succeed on valid input")
 	assert.Equal("WAITING", state)
 	assert.Equal("parking", clarification, "Runnable has no clarification")
-	assert.Equal('$', parser.Current(), "ParseThreadState should consume the entire input")
+	assert.Equal(byte('$'), parser.Current(), "ParseThreadState should consume the entire input")
 }

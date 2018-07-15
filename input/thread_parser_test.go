@@ -1,7 +1,8 @@
 package input
 
-import(
+import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,5 +30,5 @@ $`)
 	assert.Equal("nioEventLoopGroup-2-1", thread.Name)
 	assert.Equal("RUNNABLE", thread.JavaState)
 	assert.Equal(13, len(thread.Stacktrace))
-	assert.Equal('$', parser.Current(), "ParseThread must consume the entire thread")
+	assert.Equal(byte('$'), parser.Current(), "ParseThread must consume the entire thread")
 }

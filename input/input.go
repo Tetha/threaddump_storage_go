@@ -1,7 +1,6 @@
 package input
 
 import "errors"
-import "unicode/utf8"
 
 type Input struct {
 	content  string
@@ -27,14 +26,17 @@ func (input *Input) Length() int {
 	return len(input.content)
 }
 
-func (input *Input) Current() rune {
-	runeValue, _ := utf8.DecodeRuneInString(input.content[input.position:])
-	return runeValue
+func (input *Input) Current() byte {
+	if input.position < input.Length() {
+		return input.content[input.position]
+	} else {
+		return 0
+	}
 }
 
 func (input *Input) Advance() {
-	_, width := utf8.DecodeRuneInString(input.content[input.position:])
-	input.position += width
+	//_, width := utf8.DecodeRuneInString(input.content[input.position:])
+	input.position += 1
 }
 
 func (input *Input) Mark() {

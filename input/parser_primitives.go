@@ -2,9 +2,9 @@ package input
 
 func (input *Input) MatchWord(word string) bool {
 	input.Mark()
-	for _, currentExpected := range word {
+	for i := 0; i < len(word); i++ {
 		current := input.Current()
-		if current == currentExpected {
+		if current == word[i] {
 			input.Advance()
 		} else {
 			input.Rollback()

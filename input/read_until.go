@@ -1,9 +1,8 @@
 package input
 
 import "bytes"
-import "unicode/utf8"
 
-func (input *Input) ReadUntil(stop rune) (bool, string) {
+func (input *Input) ReadUntil(stop byte) (bool, string) {
 	var word bytes.Buffer
 
 	// safety measure in case the other conditions never match
@@ -12,12 +11,12 @@ func (input *Input) ReadUntil(stop rune) (bool, string) {
 	// number of characters in the input
 	var steps = 0
 	input.Mark()
-	for input.Current() != stop && input.Current() != utf8.RuneError && steps < input.Length() {
-		word.WriteRune(input.Current())
+	for input.Current() != stop && steps < input.Length() {
+		word.WriteByte(input.Current())
 		input.Advance()
-		steps += 1
+		steps++
 	}
-	if input.Current() == utf8.RuneError {
+	if input.Current() != stop {
 		input.Rollback()
 		return false, ""
 	} else {

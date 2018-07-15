@@ -31,5 +31,5 @@ $`)
 	assert.True(parsed == "", "ParseThread should succeed on valid input")
 	assert.Equal(1, len(threaddump.Threads))
 	assert.Equal("Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.20-b23 mixed mode):", threaddump.Header)
-	assert.Equal('$', parser.Current(), "ParseThread must consume the entire thread")
+	assert.Equal(byte('$'), parser.Current(), "ParseThread must consume the entire thread")
 }
