@@ -6,10 +6,10 @@ import (
 
 	"database/sql"
 
-	"github.com/alecthomas/template"
+	"html/template"
+
 	_ "github.com/mattn/go-sqlite3"
 
-	"encoding/json"
 	"net/http"
 )
 
@@ -49,9 +49,34 @@ type StacktraceLine struct {
 	SourceFile  *string `json:"source_file,omitempty"`
 }
 
-/*
+var templates = template.Must(template.ParseGlob("templates/*.html"))
+
+func main() {
+	http.HandleFunc("/threaddumps", listThreaddumps)
+	http.HandleFunc("/threads/", listThreads)
+	log.Print("Serving on 8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
 func listThreads(w http.ResponseWriter, r *http.Request) {
-	requestedId := pat.Param(r, "id")
+	// TODO: validation
+
+	r.ParseForm()
+	requestedID := r.URL.Path[len("/threads/"):]
+	if requestedID == "" {
+		http.Error(w, "400: Missing threaddump id", 400)
+		return
+	}
+
+	from := r.FormValue("from")
+	if from == "" {
+		from = "0"
+	}
+	to := r.FormValue("to")
+	if to == "" {
+		to = "20"
+	}
+	log.Printf("Listing from %s to %s", from, to)
 
 	db, err := sql.Open("sqlite3", "./threaddump.db")
 	if err != nil {
@@ -73,7 +98,8 @@ func listThreads(w http.ResponseWriter, r *http.Request) {
 												 FROM java_threads as thread, stacktrace_lines as line
 												 WHERE thread.id = line.java_thread_id
 												   AND thread.threaddump_id = ?
-												 ORDER BY thread.id, line.line_number`, requestedId)
+												 ORDER BY thread.id, line.line_number
+												 LIMIT ? OFFSET ?`, requestedID, to, from)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,18 +124,13 @@ func listThreads(w http.ResponseWriter, r *http.Request) {
 
 		threads[len(threads)-1].StacktraceLines = append(threads[len(threads)-1].StacktraceLines, line)
 	}
-
-	b, err := json.Marshal(threads)
+	err = templates.ExecuteTemplate(w, "threads_list.html", threads)
 	if err != nil {
-		log.Fatal(err)
+		http.Error(w, "500: Error rending template", 500)
+		log.Printf("Error rendering template: %s", err)
+		return
 	}
-	w.Write(b)
-
-	/*
-		encoder := json.NewEncoder(w)
-		err = encoder.Encode(threads)
 }
-*/
 
 func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("sqlite3", "./threaddump.db")
@@ -132,42 +153,12 @@ func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 		}
 		dumps = append(dumps, dump)
 	}
-	t, err := template.ParseFiles("templates/threaddumps/list.html")
+	err = templates.ExecuteTemplate(w, "threaddumps_list.html", dumps)
 	if err != nil {
-		http.Error(w, "Error rending template", 500)
+		http.Error(w, "500: Error rending template", 500)
+		log.Printf("Error rendering template: %s", err)
 		return
 	}
-	t.Execute(w, dumps)
-}
-
-func listThreaddumpsOld(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open("sqlite3", "./threaddump.db")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	rows, err := db.Query("SELECT id, application, host, upload_time FROM threaddumps")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	dumps := []Threaddump{}
-	for rows.Next() {
-		var dump Threaddump
-		err := rows.Scan(&dump.ID, &dump.Application, &dump.Host, &dump.Uploaded)
-		if err != nil {
-			log.Fatal(err)
-		}
-		dumps = append(dumps, dump)
-	}
-	encoder := json.NewEncoder(w)
-	encoder.Encode(dumps)
-}
-
-func main() {
-	http.HandleFunc("/threaddumps", listThreaddumps)
-	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func sqliteTest() {
