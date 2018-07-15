@@ -1,10 +1,6 @@
 package input
 
-import "bytes"
-
 func (input *Input) ReadUntil(stop byte) (bool, string) {
-	var word bytes.Buffer
-
 	// safety measure in case the other conditions never match
 	// this look needs to consider each character in the string
 	// once, so the loop never needs to iterate more than the
@@ -12,7 +8,6 @@ func (input *Input) ReadUntil(stop byte) (bool, string) {
 	var steps = 0
 	input.Mark()
 	for input.Current() != stop && steps < input.Length() {
-		//word.WriteByte(input.Current())
 		input.Advance()
 		steps++
 	}
@@ -21,7 +16,6 @@ func (input *Input) ReadUntil(stop byte) (bool, string) {
 		return false, ""
 	} else {
 		input.Commit()
-		return true, input.GetLastCharacters(steps)
-		return true, word.String()
+		return true, input.GetLastCharacters(steps, 0)
 	}
 }

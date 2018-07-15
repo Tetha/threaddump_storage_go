@@ -34,8 +34,8 @@ func (input *Input) Current() byte {
 	}
 }
 
-func (input *Input) GetLastCharacters(n int) string {
-	return input.content[input.position-n : input.position]
+func (input *Input) GetLastCharacters(n int, skip int) string {
+	return input.content[input.position-n-skip : input.position-skip]
 }
 
 func (input *Input) Advance() {
