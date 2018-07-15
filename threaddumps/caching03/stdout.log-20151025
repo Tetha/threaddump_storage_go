@@ -1,0 +1,14 @@
+2015-10-24 02:19:10,908 ERROR Attempted to append to non-started appender event_file
+2015-10-24 02:19:10,934 ERROR Attempted to append to non-started appender partial_hits
+2015-10-24 02:19:10,946 ERROR Attempted to append to non-started appender error
+2015-10-24 02:19:10,956 ERROR Attempted to append to non-started appender info
+2015-10-24 14:44:54,404 ERROR Attempted to append to non-started appender debug
+2015-10-24 14:44:54,432 ERROR Attempted to append to non-started appender event_file
+2015-10-24 14:44:54,455 ERROR Attempted to append to non-started appender partial_hits
+2015-10-24 14:44:54,473 ERROR Attempted to append to non-started appender error
+2015-10-24 14:44:54,493 ERROR Attempted to append to non-started appender info
+2015-10-24 16:55:55,164 ERROR Attempted to append to non-started appender debug
+2015-10-24 16:55:55,193 ERROR Attempted to append to non-started appender event_file
+2015-10-24 16:55:55,209 ERROR Attempted to append to non-started appender partial_hits
+2015-10-24 16:55:55,224 ERROR Attempted to append to non-started appender error
+2015-10-24 16:55:55,239 ERROR Attempted to append to non-started appender info

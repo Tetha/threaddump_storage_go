@@ -1,0 +1,16 @@
+2015-11-05 13:59:49,920 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 14:03:49,751 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 14:17:41,103 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 14:20:29,550 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 13:28:30,824 ERROR Cannot locate file /etc/bifroest/bifroest/log4j2.xml java.io.FileNotFoundException: /etc/bifroest/bifroest/log4j2.xml (Too many open files)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:138)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.resetInputStream(ConfigurationSource.java:158)
+	at org.apache.logging.log4j.core.config.xml.XmlConfiguration.reconfigure(XmlConfiguration.java:231)
+	at org.apache.logging.log4j.core.LoggerContext.onChange(LoggerContext.java:456)
+	at org.apache.logging.log4j.core.config.FileConfigurationMonitor$ReconfigurationWorker.run(FileConfigurationMonitor.java:107)
+	at java.lang.Thread.run(Thread.java:745)
+
+2015-11-05 14:29:04,000 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 17:27:13,076 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-11-05 17:31:48,629 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!

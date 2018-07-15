@@ -1,0 +1,43 @@
+2015-10-22 13:18:10,040 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+ERROR StatusLogger File not found in file system or classpath: /etc/bifroest/bifroest/log4j2.xml
+ERROR StatusLogger No log4j2 configuration file found. Using default configuration: logging only errors to the console.
+11:18:10.528 [main] ERROR com.goodgame.profiling.commons.systems.configuration.ActualJSONConfigurationLoader - Could not load configuration
+java.nio.file.NoSuchFileException: /etc/bifroest/bifroest/cap/logging.json
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86) ~[?:1.8.0_20]
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102) ~[?:1.8.0_20]
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107) ~[?:1.8.0_20]
+	at sun.nio.fs.UnixFileAttributeViews$Basic.readAttributes(UnixFileAttributeViews.java:55) ~[?:1.8.0_20]
+	at sun.nio.fs.UnixFileSystemProvider.readAttributes(UnixFileSystemProvider.java:144) ~[?:1.8.0_20]
+	at sun.nio.fs.LinuxFileSystemProvider.readAttributes(LinuxFileSystemProvider.java:99) ~[?:1.8.0_20]
+	at java.nio.file.Files.readAttributes(Files.java:1737) ~[?:1.8.0_20]
+	at java.nio.file.FileTreeWalker.getAttributes(FileTreeWalker.java:225) ~[?:1.8.0_20]
+	at java.nio.file.FileTreeWalker.visit(FileTreeWalker.java:276) ~[?:1.8.0_20]
+	at java.nio.file.FileTreeWalker.walk(FileTreeWalker.java:322) ~[?:1.8.0_20]
+	at java.nio.file.Files.walkFileTree(Files.java:2662) ~[?:1.8.0_20]
+	at com.goodgame.profiling.commons.systems.configuration.ActualJSONConfigurationLoader$JSONFileVisitor.visitFile(ActualJSONConfigurationLoader.java:112) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.configuration.ActualJSONConfigurationLoader$JSONFileVisitor.visitFile(ActualJSONConfigurationLoader.java:102) ~[profiling-commons-26.4.6.jar:?]
+	at java.nio.file.Files.walkFileTree(Files.java:2670) ~[?:1.8.0_20]
+	at com.goodgame.profiling.commons.systems.configuration.ActualJSONConfigurationLoader.loadConfiguration(ActualJSONConfigurationLoader.java:86) [profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.boot.BootLoaderNG.loadConfiguration(BootLoaderNG.java:242) [profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.boot.BootLoaderNG.<init>(BootLoaderNG.java:90) [profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.boot.BootLoaderNG.<init>(BootLoaderNG.java:72) [profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.GenericMain.main(GenericMain.java:28) [profiling-commons-26.4.6.jar:?]
+11:18:10.558 [main] ERROR com.goodgame.profiling.commons.boot.BootLoaderNG - Exception in thread main
+org.json.JSONException: JSONObject["bootloader"] not found.
+	at org.json.JSONObject.get(JSONObject.java:476) ~[json-20141113.jar:?]
+	at org.json.JSONObject.getJSONObject(JSONObject.java:576) ~[json-20141113.jar:?]
+	at com.goodgame.profiling.commons.GenericMain.main(GenericMain.java:30) ~[profiling-commons-26.4.6.jar:?]
+2015-10-23 13:17:22,169 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+ERROR StatusLogger File not found in file system or classpath: /etc/bifroest/bifroest/log4j2.xml
+ERROR StatusLogger No log4j2 configuration file found. Using default configuration: logging only errors to the console.
+11:17:22.821 [main] ERROR com.goodgame.profiling.commons.boot.BootLoaderNG - Exception in thread main
+java.lang.NullPointerException
+	at com.goodgame.profiling.commons.systems.net.jsonserver.CommandGroup.add(CommandGroup.java:39) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactory.findCommands(JSONConnectionHandlerFactory.java:43) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactory.<init>(JSONConnectionHandlerFactory.java:24) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactoryFactory.createFactory(JSONConnectionHandlerFactoryFactory.java:36) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactoryFactory.createFactory(JSONConnectionHandlerFactoryFactory.java:16) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.multiserver.MultiServerSystem.configure(MultiServerSystem.java:61) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.boot.BootLoaderNG.enableSubsystem(BootLoaderNG.java:229) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.GenericMain.main(GenericMain.java:33) ~[profiling-commons-26.4.6.jar:?]
+2015-10-23 14:16:47,537 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!

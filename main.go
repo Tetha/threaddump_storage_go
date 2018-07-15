@@ -9,6 +9,7 @@ import (
 	"html/template"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/tetha/threaddumpstorage-go/upload"
 
 	"net/http"
 )
@@ -52,6 +53,7 @@ type StacktraceLine struct {
 var templates = template.Must(template.ParseGlob("templates/*.html"))
 
 func main() {
+	http.HandleFunc("/upload", upload.HandleUpload)
 	http.HandleFunc("/threaddumps", listThreaddumps)
 	http.HandleFunc("/threads/", listThreads)
 	log.Print("Serving on 8080...")

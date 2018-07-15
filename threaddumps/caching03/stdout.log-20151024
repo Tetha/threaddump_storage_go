@@ -1,0 +1,19 @@
+2015-10-23 13:17:39,438 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+ERROR StatusLogger File not found in file system or classpath: /etc/bifroest/bifroest/log4j2.xml
+ERROR StatusLogger No log4j2 configuration file found. Using default configuration: logging only errors to the console.
+11:17:40.076 [main] ERROR com.goodgame.profiling.commons.boot.BootLoaderNG - Exception in thread main
+java.lang.NullPointerException
+	at com.goodgame.profiling.commons.systems.net.jsonserver.CommandGroup.add(CommandGroup.java:39) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactory.findCommands(JSONConnectionHandlerFactory.java:43) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactory.<init>(JSONConnectionHandlerFactory.java:24) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactoryFactory.createFactory(JSONConnectionHandlerFactoryFactory.java:36) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.JSONConnectionHandlerFactoryFactory.createFactory(JSONConnectionHandlerFactoryFactory.java:16) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.systems.net.multiserver.MultiServerSystem.configure(MultiServerSystem.java:61) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.boot.BootLoaderNG.enableSubsystem(BootLoaderNG.java:229) ~[profiling-commons-26.4.6.jar:?]
+	at com.goodgame.profiling.commons.GenericMain.main(GenericMain.java:33) ~[profiling-commons-26.4.6.jar:?]
+2015-10-23 14:16:47,234 | process_director.aspects.unix.components.daemon | INFO | Logfiles opened!
+2015-10-23 18:02:38,166 ERROR Attempted to append to non-started appender debug
+2015-10-23 18:02:38,178 ERROR Attempted to append to non-started appender event_file
+2015-10-23 18:02:38,186 ERROR Attempted to append to non-started appender partial_hits
+2015-10-23 18:02:38,195 ERROR Attempted to append to non-started appender error
+2015-10-23 18:02:38,203 ERROR Attempted to append to non-started appender info
