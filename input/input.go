@@ -34,13 +34,29 @@ func (input *Input) Current() byte {
 	}
 }
 
+func (input *Input) CurrentMany(num int) string {
+	if input.position+num < input.Length() {
+		return input.content[input.position : input.position+num]
+	} else {
+		return input.content[input.position:]
+	}
+}
+
 func (input *Input) GetLastCharacters(n int, skip int) string {
 	return input.content[input.position-n-skip : input.position-skip]
 }
 
+// these methods are incorreect as soon we encounter a string with
+// >1 byte per code point. But it's quite a bit faster this way.
+
 func (input *Input) Advance() {
 	//_, width := utf8.DecodeRuneInString(input.content[input.position:])
-	input.position += 1
+	input.position++
+}
+
+func (input *Input) AdvanceMany(num int) {
+	//_, width := utf8.DecodeRuneInString(input.content[input.position:])
+	input.position += num
 }
 
 func (input *Input) Mark() {
