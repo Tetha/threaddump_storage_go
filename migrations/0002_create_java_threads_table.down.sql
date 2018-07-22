@@ -1,0 +1,1 @@
+CREATE TABLE `java_threads`;
