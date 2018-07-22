@@ -9,6 +9,7 @@ import (
 	"html/template"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/tetha/threaddumpstorage-go/threads"
 	"github.com/tetha/threaddumpstorage-go/upload"
 
 	"net/http"
@@ -64,12 +65,13 @@ func main() {
 
 	r.HandleFunc("/upload", upload.HandleUpload)
 	r.HandleFunc("/threaddumps", listThreaddumps)
-	r.HandleFunc("/threads/", listThreads)
+	r.HandleFunc("/threads/", threads.ListThreads)
 
 	log.Print("Serving on 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
 
+/*
 func listThreads(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation
 
@@ -143,7 +145,7 @@ func listThreads(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
+*/
 func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("sqlite3", "./threaddump.db")
 	if err != nil {
@@ -153,7 +155,8 @@ func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 
 	rows, err := db.Query("SELECT id, application, host, upload_time FROM threaddumps")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Error with db query: %s", err)
+		http.Error(w, "500: Database Error", 500)
 	}
 
 	dumps := []Threaddump{}
@@ -161,7 +164,8 @@ func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 		var dump Threaddump
 		err := rows.Scan(&dump.ID, &dump.Application, &dump.Host, &dump.Uploaded)
 		if err != nil {
-			log.Fatal(err)
+			log.Printf("Error scanning result rows: %s", err)
+			http.Error(w, "500: Database Error", 500)
 		}
 		dumps = append(dumps, dump)
 	}

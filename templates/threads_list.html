@@ -1,7 +1,15 @@
-<ul>
-    {{ range . }}
-    <li>
-        {{ .Name }}
-    </li>
-    {{ end }}
-</ul>
+<html>
+    <body>
+        <div>
+            <a href="/threads/{{ .ThreaddumpID }}?from={{ .PreviousPageStart }}"> Prev </a>
+            <a href="/threads/{{ .ThreaddumpID }}?from={{ .NextPageStart }}"> Next </a>
+        </div>
+        <ul>
+            {{ range .Threads }}
+            <li>
+                {{ .Name }}
+            </li>
+            {{ end }}
+        </ul>
+    </body>
+</html>
