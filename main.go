@@ -9,6 +9,7 @@ import (
 	"html/template"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/tetha/threaddumpstorage-go/threadpools"
 	"github.com/tetha/threaddumpstorage-go/threads"
 	"github.com/tetha/threaddumpstorage-go/upload"
 
@@ -57,15 +58,23 @@ var templates = template.Must(template.ParseGlob("templates/*.html"))
 func main() {
 	r := http.NewServeMux()
 
+	// Setup pprof http
 	r.HandleFunc("/debug/pprof/", pprof.Index)
 	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
 	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
 	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
+	// handle static content
+	fs := http.FileServer(http.Dir("static"))
+	r.Handle("/static/", http.StripPrefix("/static", fs))
+
+	// handle actual functions
 	r.HandleFunc("/upload", upload.HandleUpload)
 	r.HandleFunc("/threaddumps", listThreaddumps)
 	r.HandleFunc("/threads/", threads.ListThreads)
+
+	r.HandleFunc("/threadpools/", threadpools.ListThreadpools)
 
 	log.Print("Serving on 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))

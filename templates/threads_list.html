@@ -1,12 +1,17 @@
+<!doctype html>
 <html>
+    <head>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <script src="/static/js/bootstrap.bundle.min.js"></script>
+    </head>
     <body>
         <div>
             <a href="/threads/{{ .ThreaddumpID }}?from={{ .PreviousPageStart }}"> Prev </a>
             <a href="/threads/{{ .ThreaddumpID }}?from={{ .NextPageStart }}"> Next </a>
         </div>
-        <ul>
+        <ul class="">
             {{ range .Threads }}
-            <li>
+            <li class="">
                 {{ .Name }}
             </li>
             {{ end }}
