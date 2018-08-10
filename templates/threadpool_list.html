@@ -6,5 +6,24 @@
     </head>
     <body>
         <h1> Unknown Threads: {{ .UnknownThreads | len }} </h1>
+        <h1> Identified Threadpools: {{ .ThreadPools | len }} </h1>
+
+        <ul>
+            {{ range .UnknownThreads }}
+            <li> {{ .Name }} </li>
+            {{ end }}
+        </ul>
+        <table>
+            <tr>
+                <th> Pool </th>
+                <th> Threads </th>
+            </tr>
+            {{ range $name, $threads := .ThreadPools }}
+            <tr>
+                <td>{{ $name }}</td>
+                <td>{{ $threads | len }}</td>
+            </tr>
+            {{ end }}
+        </table>
     </body>
 </html>

@@ -3,8 +3,10 @@ package threadpools
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 
 	"html/template"
 )
@@ -64,7 +66,23 @@ func ListThreadpools(w http.ResponseWriter, r *http.Request) {
 func figureOutThreadpools(threads []javaThread) (pools threadPoolDetection) {
 	pools.ThreadPools = make(map[string][]javaThread)
 	pools.UnknownThreads = threads
+
+	findElasticsearchThreadpools(&pools)
 	return
+}
+
+func findElasticsearchThreadpools(pools *threadPoolDetection) {
+	var newUnknownThreads []javaThread
+	nameRegex := regexp.MustCompile(`^elasticsearch\[([^]]+)\]\[([^]]+)\]`)
+	for _, thread := range pools.UnknownThreads {
+		if match := nameRegex.FindStringSubmatch(thread.Name); match != nil {
+			readableName := fmt.Sprintf("elasticsearch (instance=%s, pool=%s)", match[1], match[2])
+			pools.ThreadPools[readableName] = append(pools.ThreadPools[readableName], thread)
+		} else {
+			newUnknownThreads = append(newUnknownThreads, thread)
+		}
+	}
+	pools.UnknownThreads = newUnknownThreads
 }
 
 func getThreadsFromDB(db *sql.DB, threaddumpID string) ([]javaThread, error) {
