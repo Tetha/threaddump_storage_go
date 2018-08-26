@@ -68,7 +68,22 @@ func figureOutThreadpools(threads []javaThread) (pools threadPoolDetection) {
 	pools.UnknownThreads = threads
 
 	findElasticsearchThreadpools(&pools)
+	findNumberedThreads(&pools)
 	return
+}
+
+func findNumberedThreads(pools *threadPoolDetection) {
+	var newUnknownThreads []javaThread
+	nameRegex := regexp.MustCompile(`(.+?)[-#]?\d+$`)
+	for _, thread := range pools.UnknownThreads {
+		if match := nameRegex.FindStringSubmatch(thread.Name); match != nil {
+			readableName := match[1]
+			pools.ThreadPools[readableName] = append(pools.ThreadPools[readableName], thread)
+		} else {
+			newUnknownThreads = append(newUnknownThreads, thread)
+		}
+	}
+	pools.UnknownThreads = newUnknownThreads
 }
 
 func findElasticsearchThreadpools(pools *threadPoolDetection) {
