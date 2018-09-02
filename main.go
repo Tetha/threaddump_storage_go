@@ -13,6 +13,8 @@ import (
 	"github.com/tetha/threaddumpstorage-go/threads"
 	"github.com/tetha/threaddumpstorage-go/upload"
 
+	"github.com/gorilla/mux"
+
 	"net/http"
 	"net/http/pprof"
 )
@@ -56,25 +58,37 @@ type StacktraceLine struct {
 var templates = template.Must(template.ParseGlob("templates/*.html"))
 
 func main() {
-	r := http.NewServeMux()
+	r := mux.NewRouter()
 
+	// ----------------
 	// Setup pprof http
+	// ----------------
 	r.HandleFunc("/debug/pprof/", pprof.Index)
 	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
 	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
 	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
 	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
-	// handle static content
+	// --------------
+	// Static Content
+	// --------------
 	fs := http.FileServer(http.Dir("static"))
-	r.Handle("/static/", http.StripPrefix("/static", fs))
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
 
-	// handle actual functions
+	// -------------------------
+	// Threaddump detail section
+	// -------------------------
+	s := r.PathPrefix("/threaddump/{dumpId:[0-9]+}").Subrouter()
+	s.HandleFunc("/pools", threadpools.ListThreadpools)
+	s.HandleFunc("/threads", threads.ListThreads)
+
+	// -----------------------------
+	// Threaddump management section
+	// -----------------------------
 	r.HandleFunc("/upload", upload.HandleUpload)
 	r.HandleFunc("/threaddumps", listThreaddumps)
-	r.HandleFunc("/threads/", threads.ListThreads)
 
-	r.HandleFunc("/threadpools/", threadpools.ListThreadpools)
+	http.Handle("/", r)
 
 	log.Print("Serving on 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))

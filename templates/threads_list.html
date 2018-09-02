@@ -6,8 +6,8 @@
     </head>
     <body>
         <div>
-            <a href="/threads/{{ .ThreaddumpID }}?from={{ .PreviousPageStart }}"> Prev </a>
-            <a href="/threads/{{ .ThreaddumpID }}?from={{ .NextPageStart }}"> Next </a>
+            <a href="/threaddump/{{ .ThreaddumpID }}/threads?from={{ .PreviousPageStart }}"> Prev </a>
+            <a href="/threaddump/{{ .ThreaddumpID }}/threads?from={{ .NextPageStart }}"> Next </a>
         </div>
         <ul class="">
             {{ range .Threads }}

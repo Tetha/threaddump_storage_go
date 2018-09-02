@@ -7,6 +7,8 @@ import (
 	"strconv"
 
 	"html/template"
+
+	"github.com/gorilla/mux"
 )
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
@@ -46,12 +48,8 @@ func (list pagedThreadList) NextPageStart() int {
 func ListThreads(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation
 
+	threaddumpID := mux.Vars(r)["dumpId"]
 	r.ParseForm()
-	threaddumpID := r.URL.Path[len("/threads/"):]
-	if threaddumpID == "" {
-		http.Error(w, "400: Missing threaddump id", 400)
-		return
-	}
 
 	fromRaw := r.FormValue("from")
 	if fromRaw == "" {

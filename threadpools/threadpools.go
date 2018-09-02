@@ -9,6 +9,8 @@ import (
 	"regexp"
 
 	"html/template"
+
+	"github.com/gorilla/mux"
 )
 
 type javaThread struct {
@@ -36,7 +38,7 @@ var templates = template.Must(template.ParseGlob("templates/*.html"))
 // ListThreadpools is an http handler which displays all detected threadpools
 func ListThreadpools(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	threaddumpID := r.URL.Path[len("/threadpools/"):]
+	threaddumpID := mux.Vars(r)["dumpId"]
 	if threaddumpID == "" {
 		http.Error(w, "400: Missing threaddump id", 400)
 		return
