@@ -9,7 +9,8 @@ import (
 	"html/template"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/tetha/threaddumpstorage-go/threadpools"
+	"github.com/tetha/threaddumpstorage-go/database"
+	"github.com/tetha/threaddumpstorage-go/handlers"
 	"github.com/tetha/threaddumpstorage-go/threads"
 	"github.com/tetha/threaddumpstorage-go/upload"
 
@@ -75,11 +76,17 @@ func main() {
 	fs := http.FileServer(http.Dir("static"))
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static", fs))
 
+	db, err := database.NewSQLiteStore("./threaddump.db")
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	env := handlers.NewEnvironment(db)
 	// -------------------------
 	// Threaddump detail section
 	// -------------------------
 	s := r.PathPrefix("/threaddump/{dumpId:[0-9]+}").Subrouter()
-	s.HandleFunc("/pools", threadpools.ListThreadpools)
+	s.HandleFunc("/pools", env.ListThreadpools)
 	s.HandleFunc("/threads", threads.ListThreads)
 
 	// -----------------------------
