@@ -23,7 +23,29 @@ func NewSQLiteStore(filename string) (*SQLiteStore, error) {
 	return &SQLiteStore{db}, nil
 }
 
-/*ListThreadHeadersInDump implementation for sqlite*/
+/*ListPagedThreadHeaders is used to paginate thread headers in a threaddump*/
+func (store *SQLiteStore) ListPagedThreadHeaders(threaddumpID string, limit int, offset int) ([]model.JavaThreadHeader, error) {
+	rows, err := store.db.Query(`SELECT id, name, java_id, is_daemon, prio, os_prio, tid, nid, native_thread_state, condition_address, java_thread_state, java_state_clarification
+						         FROM java_threads
+						         WHERE threaddump_id = ?
+						         ORDER BY id
+						         LIMIT ? OFFSET ?`, threaddumpID, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+
+	threads := []model.JavaThreadHeader{}
+	for rows.Next() {
+		thread, err := decodeJavaThreadHeader(rows)
+		if err != nil {
+			return nil, err
+		}
+		threads = append(threads, *thread)
+	}
+	return threads, nil
+}
+
+/*ListAllThreadHeadersInDump implementation for sqlite*/
 func (store *SQLiteStore) ListAllThreadHeadersInDump(threaddumpID string) ([]model.JavaThreadHeader, error) {
 	rows, err := store.db.Query(`SELECT id, name, java_id, is_daemon, prio, os_prio, tid, nid, native_thread_state, condition_address, java_thread_state, java_state_clarification
 						   FROM java_threads
@@ -36,62 +58,70 @@ func (store *SQLiteStore) ListAllThreadHeadersInDump(threaddumpID string) ([]mod
 
 	threads := []model.JavaThreadHeader{}
 	for rows.Next() {
-		var thread model.JavaThreadHeader
-
-		var name sql.NullString
-		var javaID sql.NullString
-		// isDaemon is boolean, not nullable
-		var prio sql.NullInt64
-		var osPrio sql.NullInt64
-		var tid sql.NullString
-		var nid sql.NullString
-		var nativeThreadState sql.NullString
-		var conditionAddress sql.NullString
-		var javaThreadState sql.NullString
-		var javaThreadStateClarification sql.NullString
-
-		err := rows.Scan(&thread.ID, &name, &javaID, &thread.IsDaemon, &prio, &osPrio, &tid, &nid, &nativeThreadState, &conditionAddress, &javaThreadState, &javaThreadStateClarification)
+		thread, err := decodeJavaThreadHeader(rows)
 		if err != nil {
-			log.Printf("Error with db query: %s", err)
-			return nil, errors.New("Scan error")
+			return nil, err
 		}
-
-		if name.Valid {
-			thread.Name = name.String
-		}
-		if javaID.Valid {
-			thread.JavaID = javaID.String
-		}
-		if prio.Valid {
-			thread.Prio = int(prio.Int64)
-		} else {
-			thread.Prio = -1
-		}
-		if osPrio.Valid {
-			thread.OsPrio = int(osPrio.Int64)
-		} else {
-			thread.OsPrio = -1
-		}
-		if tid.Valid {
-			thread.Tid = tid.String
-		}
-		if nid.Valid {
-			thread.Nid = nid.String
-		}
-		if nativeThreadState.Valid {
-			thread.NativeThreadState = nativeThreadState.String
-		}
-		if conditionAddress.Valid {
-			thread.ConditionAddress = conditionAddress.String
-		}
-		if javaThreadState.Valid {
-			thread.JavaThreadState = javaThreadState.String
-		}
-		if javaThreadStateClarification.Valid {
-			thread.JavaStateClarification = javaThreadStateClarification.String
-		}
-
-		threads = append(threads, thread)
+		threads = append(threads, *thread)
 	}
 	return threads, nil
+}
+
+func decodeJavaThreadHeader(rows *sql.Rows) (*model.JavaThreadHeader, error) {
+	var thread model.JavaThreadHeader
+
+	var name sql.NullString
+	var javaID sql.NullString
+	// isDaemon is boolean, not nullable
+	var prio sql.NullInt64
+	var osPrio sql.NullInt64
+	var tid sql.NullString
+	var nid sql.NullString
+	var nativeThreadState sql.NullString
+	var conditionAddress sql.NullString
+	var javaThreadState sql.NullString
+	var javaThreadStateClarification sql.NullString
+
+	err := rows.Scan(&thread.ID, &name, &javaID, &thread.IsDaemon, &prio, &osPrio, &tid, &nid, &nativeThreadState, &conditionAddress, &javaThreadState, &javaThreadStateClarification)
+	if err != nil {
+		log.Printf("Error with db query: %s", err)
+		return nil, errors.Wrap(err, "Scan error")
+	}
+
+	if name.Valid {
+		thread.Name = name.String
+	}
+	if javaID.Valid {
+		thread.JavaID = javaID.String
+	}
+	if prio.Valid {
+		thread.Prio = int(prio.Int64)
+	} else {
+		thread.Prio = -1
+	}
+	if osPrio.Valid {
+		thread.OsPrio = int(osPrio.Int64)
+	} else {
+		thread.OsPrio = -1
+	}
+	if tid.Valid {
+		thread.Tid = tid.String
+	}
+	if nid.Valid {
+		thread.Nid = nid.String
+	}
+	if nativeThreadState.Valid {
+		thread.NativeThreadState = nativeThreadState.String
+	}
+	if conditionAddress.Valid {
+		thread.ConditionAddress = conditionAddress.String
+	}
+	if javaThreadState.Valid {
+		thread.JavaThreadState = javaThreadState.String
+	}
+	if javaThreadStateClarification.Valid {
+		thread.JavaStateClarification = javaThreadStateClarification.String
+	}
+
+	return &thread, nil
 }

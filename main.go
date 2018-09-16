@@ -11,7 +11,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/tetha/threaddumpstorage-go/database"
 	"github.com/tetha/threaddumpstorage-go/handlers"
-	"github.com/tetha/threaddumpstorage-go/threads"
 	"github.com/tetha/threaddumpstorage-go/upload"
 
 	"github.com/gorilla/mux"
@@ -87,7 +86,7 @@ func main() {
 	// -------------------------
 	s := r.PathPrefix("/threaddump/{dumpId:[0-9]+}").Subrouter()
 	s.HandleFunc("/pools", env.ListThreadpools)
-	s.HandleFunc("/threads", threads.ListThreads)
+	s.HandleFunc("/threads", env.ListThreads)
 
 	// -----------------------------
 	// Threaddump management section
