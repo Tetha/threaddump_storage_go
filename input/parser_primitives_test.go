@@ -2,38 +2,28 @@ package input
 
 import "testing"
 
+var matchStringTests = map[string]struct {
+	input           string
+	matchedWord     string
+	expectedMatch   bool
+	expectedCurrent byte
+}{
+	"happy case":      {"someString", "some", true, 'S'},
+	"failure in word": {"someString", "somd", false, 's'},
+	"end of string":   {"someString", "someStringAndThenSome", false, 's'},
+	"uncovered line":  {"poof", "foop", false, 'p'},
+}
+
 func TestMatchString(t *testing.T) {
-	parser := CreateInput("someString")
-	matched := parser.MatchWord("some")
-	if !matched {
-		t.Error("MatchWord failed")
-	}
+	for name, tt := range matchStringTests {
+		parser := CreateInput(tt.input)
+		matched := parser.MatchWord(tt.matchedWord)
 
-	if parser.Current() != 'S' {
-		t.Errorf("MatchWord should advance input to <S> but was %q", parser.Current())
-	}
-}
-
-func TestMatchStringFailsInWord(t *testing.T) {
-	parser := CreateInput("someString")
-	matched := parser.MatchWord("somd")
-	if matched {
-		t.Error("MatchWord didn't fail")
-	}
-
-	if parser.Current() != 's' {
-		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q", parser.Current())
-	}
-}
-
-func TestMatchStringFailsAtEndOfString(t *testing.T) {
-	parser := CreateInput("someString")
-	matched := parser.MatchWord("someStringAndThenSome")
-	if matched {
-		t.Error("MatchWord didn't fail")
-	}
-
-	if parser.Current() != 's' {
-		t.Errorf("MatchWord didn't roll back properly, and got stuck on %q", parser.Current())
+		if matched != tt.expectedMatch {
+			t.Errorf("%s: Expected MatchWord to return <%v>, got: <%v>", name, tt.expectedMatch, matched)
+		}
+		if parser.Current() != tt.expectedCurrent {
+			t.Errorf("%s: MatchWord should advance input to <%v> but was %q", name, tt.expectedCurrent, parser.Current())
+		}
 	}
 }
