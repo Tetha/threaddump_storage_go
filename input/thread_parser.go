@@ -55,7 +55,7 @@ func (input *Input) parseStacktraceLine() (success bool, line StacktraceLine) {
 	input.Rollback()
 
 	input.Mark()
-	success, line = input.ParseThreadPosition()
+	success, line = input.parseThreadPosition()
 	if success {
 		input.Commit()
 		return

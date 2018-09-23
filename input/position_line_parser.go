@@ -3,7 +3,7 @@ package input
 import "strings"
 import "strconv"
 
-func (input *Input) ParseThreadPosition() (success bool, result StacktraceLine) {
+func (input *Input) parseThreadPosition() (success bool, result StacktraceLine) {
 	var parsed = false
 	success = false
 

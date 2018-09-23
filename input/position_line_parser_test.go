@@ -31,6 +31,6 @@ var positionLineTests = []lineParserTest{
 
 func TestParseThreadPosition(t *testing.T) {
 	for idx, tt := range positionLineTests {
-		runParserTestcase(t, idx, tt, (*Input).ParseThreadPosition)
+		runParserTestcase(t, idx, tt, (*Input).parseThreadPosition)
 	}
 }
