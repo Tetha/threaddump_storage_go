@@ -1,6 +1,6 @@
 package input
 
-func (input *Input) ParseThread() (success bool, result Thread) {
+func (input *Input) parseThread() (success bool, result Thread) {
 	parsed := false
 
 	headerParsed, header := input.parseThreadHeader()

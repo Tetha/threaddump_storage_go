@@ -23,7 +23,7 @@ func (input *Input) ParseThreaddump() (parseFailure string, result Threaddump) {
 	}
 
 	for {
-		threadParsed, thread := input.ParseThread()
+		threadParsed, thread := input.parseThread()
 		if threadParsed {
 			result.Threads = append(result.Threads, thread)
 		} else {

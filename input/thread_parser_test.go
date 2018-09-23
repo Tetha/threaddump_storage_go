@@ -24,7 +24,7 @@ func TestParseThread(t *testing.T) {
 	at java.lang.Thread.run(Thread.java:745)
 
 $`)
-	parsed, thread := parser.ParseThread()
+	parsed, thread := parser.parseThread()
 	assert := assert.New(t)
 	assert.True(parsed, "ParseThread should succeed on valid input")
 	assert.Equal("nioEventLoopGroup-2-1", thread.Name)
