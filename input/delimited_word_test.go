@@ -2,35 +2,32 @@ package input
 
 import "testing"
 
-func TestDelimitedWordWithoutStartingDelimiter(t *testing.T) {
-	parser := CreateInput("someString")
-	parsed, delimitedWord := parser.DelimitedWord('<', '>')
-	if parsed {
-		t.Errorf("DelimitedWord should not parse, but parsed %s", delimitedWord)
-	}
+var delimitedWordTests = map[string]struct {
+	input string
+
+	mustParse       bool
+	expectedWord    string
+	expectedCurrent byte
+}{
+	"no starting delimiter": {"someString$", false, "", 's'},
+	"happy case":            {"<someString>$", true, "someString", '$'},
+	"missing delimiter":     {"<someString", false, "", '<'},
 }
 
-func TestDelimitedWordWithDelimitedWord(t *testing.T) {
-	parser := CreateInput("<someString>$")
-	parsed, delimitedWord := parser.DelimitedWord('<', '>')
-	if !parsed {
-		t.Error("DelimitedWord didn't parse properly")
-	}
-	if delimitedWord != "someString" {
-		t.Errorf("DelimitedWord should have parsed <someString>, but parsed <%s>", delimitedWord)
-	}
-	if parser.Current() != '$' {
-		t.Errorf("DelimitedWord should advance the input past the closing delimiter, but only advanced to %q", parser.Current())
-	}
-}
+func TestDelimitedWord(t *testing.T) {
+	for name, tt := range delimitedWordTests {
+		parser := CreateInput(tt.input)
+		parsed, delimitedWord := parser.DelimitedWord('<', '>')
+		if parsed != tt.mustParse {
+			t.Errorf("%s: Expected return value to be <%v>, got <%v>", name, tt.mustParse, parsed)
+		}
 
-func TestDelimitedWordWithoutEndLimiter(t *testing.T) {
-	parser := CreateInput("<someString")
-	parsed, _ := parser.DelimitedWord('<', '>')
-	if parsed {
-		t.Error("DelimitedWord cannot parse")
-	}
-	if parser.Current() != '<' {
-		t.Errorf("DelimitedWord should not advance the input  on error, but advanced to %q", parser.Current())
+		if tt.mustParse && tt.expectedWord != delimitedWord {
+			t.Errorf("%s: Expected delimitedWord to parse word <%s>, but got <%s>", name, tt.expectedWord, delimitedWord)
+		}
+
+		if parser.Current() != tt.expectedCurrent {
+			t.Errorf("%s: Expected delimitedWord to leave the input on <%x>, but it was <%x>", name, tt.expectedCurrent, parser.Current())
+		}
 	}
 }
