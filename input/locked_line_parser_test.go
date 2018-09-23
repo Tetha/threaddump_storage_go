@@ -2,27 +2,40 @@ package input
 
 import "testing"
 
+var lockLineTests = []struct {
+	input string
+
+	shouldParse bool
+	output      StacktraceLine
+	current     byte
+}{
+	{
+		"\t- locked <0x00000000e0e97cb0> (a io.netty.channel.nio.SelectedSelectionKeySet)\n$",
+		true,
+		StacktraceLine{
+			Type:        LockedLine,
+			LockAddress: "0x00000000e0e97cb0",
+			Class:       "io.netty.channel.nio.SelectedSelectionKeySet",
+		},
+		'$',
+	},
+}
+
 func TestParseLockLine(t *testing.T) {
-	parser := CreateInput("\t- locked <0x00000000e0e97cb0> (a io.netty.channel.nio.SelectedSelectionKeySet)\n$")
-	parsed, line := parser.ParseLockedLine()
+	for idx, tt := range lockLineTests {
+		parser := CreateInput(tt.input)
+		parsed, line := parser.ParseLockedLine()
 
-	if !parsed {
-		t.Error("ParseLockedLine should succeed on valid inputs")
-	}
+		if parsed != tt.shouldParse {
+			t.Errorf("%d: Expected parsed to be <%v>, got <%v>", idx, tt.shouldParse, parsed)
+		}
 
-	if line.Type != LockedLine {
-		t.Errorf("Expected result lock line to be LockedLine (%d), but got %d", LockedLine, line.Type)
-	}
+		if tt.shouldParse && line != tt.output {
+			t.Errorf("%d: Expected output to be <%v>, got <%v>", idx, tt.output, line)
+		}
 
-	if line.LockAddress != "0x00000000e0e97cb0" {
-		t.Errorf("Expected ParseLockedLine to extract LockAddress: <0x00000000e0e97cb0>, but got <%s>", line.LockAddress)
-	}
-
-	if line.Class != "io.netty.channel.nio.SelectedSelectionKeySet" {
-		t.Errorf("Expeted ParseLockedLine to extract Class: io.netty.channel.nio.SelectedSelectionKeySet, but got <%s>", line.Class)
-	}
-
-	if parser.Current() != '$' {
-		t.Errorf("Expected input to be placed on the next line but it got stuck on <%q>", parser.Current())
+		if parser.Current() != tt.current {
+			t.Errorf("%d: Expected input to be advanced to <%v>, was: <%v>", idx, tt.current, parser.Current())
+		}
 	}
 }
