@@ -24,7 +24,7 @@ var lockLineTests = []struct {
 func TestParseLockLine(t *testing.T) {
 	for idx, tt := range lockLineTests {
 		parser := CreateInput(tt.input)
-		parsed, line := parser.ParseLockedLine()
+		parsed, line := parser.parseLockedLine()
 
 		if parsed != tt.shouldParse {
 			t.Errorf("%d: Expected parsed to be <%v>, got <%v>", idx, tt.shouldParse, parsed)
