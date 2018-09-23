@@ -22,7 +22,7 @@ func (input *Input) parseThreadPosition() (success bool, result StacktraceLine) 
 	}
 
 	var call string
-	parsed, call = input.ReadUntil('(')
+	parsed, call = input.readUntil('(')
 	if !parsed {
 		return
 	}

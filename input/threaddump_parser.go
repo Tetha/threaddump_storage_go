@@ -10,7 +10,7 @@ func (input *Input) ParseThreaddump() (parseFailure string, result Threaddump) {
 		return
 	}
 	input.Rollback()
-	if parsed, header := input.ReadUntil('\n'); parsed {
+	if parsed, header := input.readUntil('\n'); parsed {
 		result.Header = header
 	} else {
 		parseFailure = "Could not find header terminating newline"

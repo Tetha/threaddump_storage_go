@@ -1,6 +1,6 @@
 package input
 
-func (input *Input) ReadUntil(stop byte) (bool, string) {
+func (input *Input) readUntil(stop byte) (bool, string) {
 	// safety measure in case the other conditions never match
 	// this look needs to consider each character in the string
 	// once, so the loop never needs to iterate more than the
@@ -14,8 +14,8 @@ func (input *Input) ReadUntil(stop byte) (bool, string) {
 	if input.Current() != stop {
 		input.Rollback()
 		return false, ""
-	} else {
-		input.Commit()
-		return true, input.GetLastCharacters(steps, 0)
 	}
+
+	input.Commit()
+	return true, input.GetLastCharacters(steps, 0)
 }

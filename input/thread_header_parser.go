@@ -21,9 +21,9 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	tries := 0
 	input.Advance() // starting "
 	start := input.Position()
-	for tries < input.Length() + 10 {
+	for tries < input.Length()+10 {
 		tries++
-		parsed, _ = input.ReadUntil('"')
+		parsed, _ = input.readUntil('"')
 		if !parsed {
 			return
 		}
@@ -40,7 +40,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 
 	// jvm internal threads don't have thread ids
 	if input.MatchWord(" #") {
-		parsed, header.Id = input.ReadUntil(' ')
+		parsed, header.Id = input.readUntil(' ')
 		if !parsed {
 			return
 		}
@@ -54,7 +54,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	// Prio
 	// Prio is optional, e.g. internal threads don't have it
 	input.Mark()
-	parsed, word = input.ReadUntil(' ')
+	parsed, word = input.readUntil(' ')
 	if !parsed {
 		return
 	}
@@ -70,7 +70,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	}
 
 	// Os-Prio
-	parsed, word = input.ReadUntil(' ')
+	parsed, word = input.readUntil(' ')
 	if !parsed {
 		return
 	}
@@ -83,7 +83,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	header.OsPrio = chunks[1]
 
 	// Tid
-	parsed, word = input.ReadUntil(' ')
+	parsed, word = input.readUntil(' ')
 	if !parsed {
 		return
 	}
@@ -96,7 +96,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	header.Tid = chunks[1]
 
 	// Nid
-	parsed, word = input.ReadUntil(' ')
+	parsed, word = input.readUntil(' ')
 	if !parsed {
 		return
 	}
@@ -108,7 +108,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 	}
 	header.Nid = chunks[1]
 
-	parsed, header.ThreadState = input.ReadUntil('[')
+	parsed, header.ThreadState = input.readUntil('[')
 	if parsed {
 		header.ThreadState = strings.TrimSpace(header.ThreadState)
 		parsed, header.ConditionAddress = input.DelimitedWord('[', ']')
@@ -116,7 +116,7 @@ func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
 			return
 		}
 	} else {
-		parsed, header.ThreadState = input.ReadUntil('\n')
+		parsed, header.ThreadState = input.readUntil('\n')
 		if !parsed {
 			return
 		}

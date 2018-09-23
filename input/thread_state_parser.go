@@ -21,7 +21,7 @@ func (input *Input) ParseThreadState() (success bool, state string, clarificatio
 	// if that's the case we need to re-start reading the
 	// state from the current position
 	input.Mark()
-	parsed, state = input.ReadUntil('(')
+	parsed, state = input.readUntil('(')
 	if parsed && !strings.Contains(state, "\n") { // stay on the same line
 		input.Mark()
 		state = strings.TrimSpace(state)
@@ -31,7 +31,7 @@ func (input *Input) ParseThreadState() (success bool, state string, clarificatio
 		}
 	} else {
 		input.Rollback()
-		parsed, state = input.ReadUntil('\n')
+		parsed, state = input.readUntil('\n')
 		if !parsed {
 			return
 		}

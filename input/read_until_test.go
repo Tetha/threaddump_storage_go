@@ -17,7 +17,7 @@ var readUntilTests = map[string]struct {
 func TestReadUntil(t *testing.T) {
 	for name, tt := range readUntilTests {
 		parser := CreateInput(tt.input)
-		parsed, word := parser.ReadUntil(tt.stopChar)
+		parsed, word := parser.readUntil(tt.stopChar)
 
 		if parsed != tt.shouldParse {
 			t.Errorf("%s: Expected parsed to be <%v>, was <%v>", name, tt.shouldParse, parsed)
