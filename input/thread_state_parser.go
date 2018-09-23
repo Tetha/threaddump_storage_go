@@ -2,7 +2,7 @@ package input
 
 import "strings"
 
-func (input *Input) ParseThreadState() (success bool, state string, clarification string) {
+func (input *Input) parseThreadState() (success bool, state string, clarification string) {
 	parsed := false
 	input.Mark()
 	defer func() {

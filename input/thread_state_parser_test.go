@@ -33,7 +33,7 @@ var threadStateTests = map[string]struct {
 func TestParseThreadState(t *testing.T) {
 	for description, tt := range threadStateTests {
 		parser := CreateInput(tt.input)
-		parsed, state, clarification := parser.ParseThreadState()
+		parsed, state, clarification := parser.parseThreadState()
 
 		assert := assert.New(t)
 		assert.Equal(tt.shouldParse, parsed, description)

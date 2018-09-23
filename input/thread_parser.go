@@ -9,7 +9,7 @@ func (input *Input) parseThread() (success bool, result Thread) {
 	}
 	result.Name, result.Id, result.IsDaemon, result.Prio, result.OsPrio, result.Tid, result.Nid, result.ThreadState, result.ConditionAddress = header.Name, header.Id, header.IsDaemon, header.Prio, header.OsPrio, header.Tid, header.Nid, header.ThreadState, header.ConditionAddress
 
-	parsed, result.JavaState, result.JavaStateDetail = input.ParseThreadState()
+	parsed, result.JavaState, result.JavaStateDetail = input.parseThreadState()
 	if !parsed {
 		return
 	}
