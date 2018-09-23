@@ -2,27 +2,33 @@ package input
 
 import "testing"
 
-func TestReadUntilHappyCase(t *testing.T) {
-	parser := CreateInput("foo(bar)")
-	parsed, word := parser.ReadUntil('(')
-	if !parsed {
-		t.Error("ReadUntil should have succeeded")
-	}
-	if word != "foo" {
-		t.Errorf("ReadUntil should have returned the word <foo> but returned <%s>", word)
-	}
-	if parser.Current() != '(' {
-		t.Errorf("ReadUntil should place the input on the character to read until, but placed it on %q", parser.Current())
-	}
+var readUntilTests = map[string]struct {
+	input    string
+	stopChar byte
+
+	shouldParse bool
+	output      string
+	current     byte
+}{
+	"happy case":    {"foo(bar)", '(', true, "foo", '('},
+	"missing start": {"someString", '(', false, "", 's'},
 }
 
-func TestReadUntilWithMissingStopChar(t *testing.T) {
-	parser := CreateInput("someString")
-	parsed, _ := parser.ReadUntil('(')
-	if parsed {
-		t.Error("ReadUntil should not parse without the end character")
-	}
-	if parser.Current() != 's' {
-		t.Errorf("ReadUntil should not advance the input, but advanced to %q", parser.Current())
+func TestReadUntil(t *testing.T) {
+	for name, tt := range readUntilTests {
+		parser := CreateInput(tt.input)
+		parsed, word := parser.ReadUntil(tt.stopChar)
+
+		if parsed != tt.shouldParse {
+			t.Errorf("%s: Expected parsed to be <%v>, was <%v>", name, tt.shouldParse, parsed)
+		}
+
+		if tt.shouldParse && word != tt.output {
+			t.Errorf("%s: Expected parsed word to be <%v>, was <%v>", name, tt.output, word)
+		}
+
+		if parser.Current() != tt.current {
+			t.Errorf("%s: Expected input to be on <%q>, but was <%q>", name, tt.current, parser.Current())
+		}
 	}
 }
