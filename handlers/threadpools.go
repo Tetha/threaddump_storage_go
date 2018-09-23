@@ -1,22 +1,14 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
-	"regexp"
-
-	"github.com/tetha/threaddumpstorage-go/model"
 
 	"html/template"
 
 	"github.com/gorilla/mux"
+	"github.com/tetha/threaddumpstorage-go/analysis"
 )
-
-type threadPoolDetection struct {
-	ThreadPools    map[string][]model.JavaThreadHeader
-	UnknownThreads []model.JavaThreadHeader
-}
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
 
@@ -35,48 +27,11 @@ func (env *RuntimeEnvironment) ListThreadpools(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	detectedPools := figureOutThreadpools(threads)
+	detectedPools := analysis.FigureOutThreadpools(threads)
 
 	err = templates.ExecuteTemplate(w, "threadpool_list.html", detectedPools)
 	if err != nil {
 		log.Printf("Error rendering template: %s", err)
 	}
 
-}
-
-func figureOutThreadpools(threads []model.JavaThreadHeader) (pools threadPoolDetection) {
-	pools.ThreadPools = make(map[string][]model.JavaThreadHeader)
-	pools.UnknownThreads = threads
-
-	findElasticsearchThreadpools(&pools)
-	findNumberedThreads(&pools)
-	return
-}
-
-func findNumberedThreads(pools *threadPoolDetection) {
-	var newUnknownThreads []model.JavaThreadHeader
-	nameRegex := regexp.MustCompile(`(.+?)[-#]?\d+$`)
-	for _, thread := range pools.UnknownThreads {
-		if match := nameRegex.FindStringSubmatch(thread.Name); match != nil {
-			readableName := match[1]
-			pools.ThreadPools[readableName] = append(pools.ThreadPools[readableName], thread)
-		} else {
-			newUnknownThreads = append(newUnknownThreads, thread)
-		}
-	}
-	pools.UnknownThreads = newUnknownThreads
-}
-
-func findElasticsearchThreadpools(pools *threadPoolDetection) {
-	var newUnknownThreads []model.JavaThreadHeader
-	nameRegex := regexp.MustCompile(`^elasticsearch\[([^]]+)\]\[([^]]+)\]`)
-	for _, thread := range pools.UnknownThreads {
-		if match := nameRegex.FindStringSubmatch(thread.Name); match != nil {
-			readableName := fmt.Sprintf("elasticsearch (instance=%s, pool=%s)", match[1], match[2])
-			pools.ThreadPools[readableName] = append(pools.ThreadPools[readableName], thread)
-		} else {
-			newUnknownThreads = append(newUnknownThreads, thread)
-		}
-	}
-	pools.UnknownThreads = newUnknownThreads
 }
