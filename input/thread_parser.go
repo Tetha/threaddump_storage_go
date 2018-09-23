@@ -3,7 +3,7 @@ package input
 func (input *Input) ParseThread() (success bool, result Thread) {
 	parsed := false
 
-	headerParsed, header := input.ParseThreadHeader()
+	headerParsed, header := input.parseThreadHeader()
 	if !headerParsed {
 		return
 	}

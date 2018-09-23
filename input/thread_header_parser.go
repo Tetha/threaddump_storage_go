@@ -2,7 +2,7 @@ package input
 
 import "strings"
 
-func (input *Input) ParseThreadHeader() (success bool, header ThreadHeader) {
+func (input *Input) parseThreadHeader() (success bool, header ThreadHeader) {
 	parsed := false
 	word := ""
 	input.Mark()
