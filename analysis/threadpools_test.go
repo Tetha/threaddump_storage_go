@@ -25,6 +25,17 @@ var threadPoolTests = map[string]struct {
 		},
 		nil,
 	},
+	"elasticsearch threads": {
+		[]model.JavaThreadHeader{
+			{Name: "elasticsearch[Vindaloo][generic][T#1471]"},
+		},
+		map[string][]model.JavaThreadHeader{
+			"elasticsearch (instance=Vindaloo, pool=generic)": {
+				{Name: "elasticsearch[Vindaloo][generic][T#1471]"},
+			},
+		},
+		nil,
+	},
 }
 
 func TestFigureOutThreadpools(t *testing.T) {
