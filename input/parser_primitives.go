@@ -1,26 +1,16 @@
 package input
 
+//MatchWord advances the input iff it starts with the given string
 func (input *Input) MatchWord(word string) bool {
-	input.Mark()
+	// There is no mark-handling here, because MatchWord
+	// has no speculative input consumption. It does a
+	// n-word lookahead without moving the cursor and
+	// changes the cursor only if the lookahead is the
+	// expected word.
 	inputWord := input.CurrentMany(len(word))
-	if inputWord == word {
-		input.AdvanceMany(len(word))
-		input.Commit()
-		return true
-	} else {
-		input.Rollback()
+	if inputWord != word {
 		return false
 	}
-
-	for i := 0; i < len(word); i++ {
-		current := input.Current()
-		if current == word[i] {
-			input.Advance()
-		} else {
-			input.Rollback()
-			return false
-		}
-	}
-	input.Commit()
+	input.AdvanceMany(len(word))
 	return true
 }
