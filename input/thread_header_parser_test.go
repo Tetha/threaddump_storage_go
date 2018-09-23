@@ -83,7 +83,7 @@ var threadHeaderTests = []struct {
 func TestParseThreadHeader(t *testing.T) {
 	for idx, tt := range threadHeaderTests {
 		parser := CreateInput(tt.input)
-		parsed, header := parser.ParseThreadHeader()
+		parsed, header := parser.parseThreadHeader()
 
 		assert := assert.New(t)
 		desc := fmt.Sprintf("%d", idx)
