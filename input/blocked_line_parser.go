@@ -1,6 +1,6 @@
 package input
 
-func (input *Input) ParseBlockedLine() (success bool, result StacktraceLine) {
+func (input *Input) parseBlockedLine() (success bool, result StacktraceLine) {
 	var parsed = false
 	success = false
 
