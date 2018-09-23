@@ -17,6 +17,6 @@ var parkedLineTests = []lineParserTest{
 
 func TestParseParkedLine(t *testing.T) {
 	for idx, tt := range parkedLineTests {
-		runParserTestcase(t, idx, tt, (*Input).ParseParkedLine)
+		runParserTestcase(t, idx, tt, (*Input).parseParkedLine)
 	}
 }

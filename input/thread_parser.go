@@ -63,7 +63,7 @@ func (input *Input) parseStacktraceLine() (success bool, line StacktraceLine) {
 	input.Rollback()
 
 	input.Mark()
-	success, line = input.ParseParkedLine()
+	success, line = input.parseParkedLine()
 	if success {
 		input.Commit()
 		return
