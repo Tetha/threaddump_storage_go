@@ -36,6 +36,15 @@ var threadPoolTests = map[string]struct {
 		},
 		nil,
 	},
+	"unknown threads": {
+		[]model.JavaThreadHeader{
+			{Name: "DestroyJVM"},
+		},
+		map[string][]model.JavaThreadHeader{},
+		[]model.JavaThreadHeader{
+			{Name: "DestroyJVM"},
+		},
+	},
 }
 
 func TestFigureOutThreadpools(t *testing.T) {
