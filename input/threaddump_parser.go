@@ -1,5 +1,6 @@
 package input
 
+//ParseThreaddump is used to parse full java thread dumps.
 func (input *Input) ParseThreaddump() (parseFailure string, result Threaddump) {
 	parseFailure = "Unknown error"
 
@@ -31,6 +32,4 @@ func (input *Input) ParseThreaddump() (parseFailure string, result Threaddump) {
 			return
 		}
 	}
-
-	return
 }
