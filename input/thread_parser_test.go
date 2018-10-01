@@ -32,3 +32,14 @@ $`)
 	assert.Equal(13, len(thread.Stacktrace))
 	assert.Equal(byte('$'), parser.Current(), "ParseThread must consume the entire thread")
 }
+
+func TestParseStacktraceLine(t *testing.T) {
+	allLineTests := make([]lineParserTest, len(waitLineTests)+len(parseBlockedLineTests)+len(lockLineTests)+len(parkedLineTests)+len(positionLineTests))
+	for _, testSet := range [][]lineParserTest{waitLineTests, parseBlockedLineTests, lockLineTests, parkedLineTests, positionLineTests} {
+		allLineTests = append(allLineTests, testSet...)
+	}
+
+	for idx, tt := range allLineTests {
+		runParserTestcase(t, idx, tt, (*Input).parseStacktraceLine)
+	}
+}
