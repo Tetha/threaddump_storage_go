@@ -40,7 +40,7 @@ func (input *Input) parseThreadHeader() (success bool, header ThreadHeader) {
 
 	// jvm internal threads don't have thread ids
 	if input.MatchWord(" #") {
-		parsed, header.Id = input.readUntil(' ')
+		parsed, header.ID = input.readUntil(' ')
 		if !parsed {
 			return
 		}

@@ -20,7 +20,7 @@ var threadHeaderTests = []struct {
 		true,
 		ThreadHeader{
 			Name:             "databaseQueryThread",
-			Id:               "242",
+			ID:               "242",
 			IsDaemon:         false,
 			Prio:             "5",
 			OsPrio:           "0",
@@ -37,7 +37,7 @@ var threadHeaderTests = []struct {
 		true,
 		ThreadHeader{
 			Name:             "ping-JollyDolphin-repeating-task-watchdog",
-			Id:               "201",
+			ID:               "201",
 			IsDaemon:         true,
 			Prio:             "5",
 			OsPrio:           "0",
@@ -68,7 +68,7 @@ var threadHeaderTests = []struct {
 		ThreadHeader{
 			Name:             "elasticsearch[Samuel \"Starr\" Saxon][generic][T#446]",
 			IsDaemon:         true,
-			Id:               "2315667",
+			ID:               "2315667",
 			Prio:             "5",
 			OsPrio:           "0",
 			Tid:              "0x00007efa98010800",

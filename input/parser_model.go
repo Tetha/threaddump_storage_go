@@ -20,7 +20,7 @@ type StacktraceLine struct {
 
 type ThreadHeader struct {
 	Name             string
-	Id               string
+	ID               string
 	IsDaemon         bool
 	Prio             string
 	OsPrio           string
@@ -32,7 +32,7 @@ type ThreadHeader struct {
 
 type Thread struct {
 	Name             string
-	Id               string
+	ID               string
 	IsDaemon         bool
 	Prio             string
 	OsPrio           string
