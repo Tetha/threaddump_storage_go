@@ -31,7 +31,7 @@ func (input *Input) parseThread() (success bool, result Thread) {
 
 func (input *Input) parseStacktraceLine() (success bool, line StacktraceLine) {
 	input.Mark()
-	success, line = input.ParseWaitLine()
+	success, line = input.parseWaitLine()
 	if success {
 		input.Commit()
 		return

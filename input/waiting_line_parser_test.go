@@ -17,6 +17,6 @@ var waitLineTests = []lineParserTest{
 
 func TestParseWaitLine(t *testing.T) {
 	for idx, tt := range waitLineTests {
-		runParserTestcase(t, idx, tt, (*Input).ParseWaitLine)
+		runParserTestcase(t, idx, tt, (*Input).parseWaitLine)
 	}
 }

@@ -1,6 +1,6 @@
 package input
 
-func (input *Input) ParseWaitLine() (success bool, result StacktraceLine) {
+func (input *Input) parseWaitLine() (success bool, result StacktraceLine) {
 	var parsed = false
 	input.Mark()
 	defer func() {
