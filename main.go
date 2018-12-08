@@ -92,7 +92,7 @@ func main() {
 	// Threaddump management section
 	// -----------------------------
 	r.HandleFunc("/upload", upload.HandleUpload)
-	r.HandleFunc("/threaddumps", listThreaddumps)
+	r.HandleFunc("/threaddumps", env.ListThreaddumps)
 
 	http.Handle("/", r)
 
@@ -175,6 +175,8 @@ func listThreads(w http.ResponseWriter, r *http.Request) {
 	}
 }
 */
+
+/*
 func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 	db, err := sql.Open("sqlite3", "./threaddump.db")
 	if err != nil {
@@ -205,7 +207,7 @@ func listThreaddumps(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
+*/
 func sqliteTest() {
 	db, err := sql.Open("sqlite3", "./threaddump.db")
 	if err != nil {

@@ -1,5 +1,16 @@
 package model
 
+import "time"
+
+/*A Threaddump contains the metadata about a single dump
+ */
+type Threaddump struct {
+	ID          int       `json:"id"`
+	Application string    `json:"application"`
+	Host        string    `json:"host"`
+	Uploaded    time.Time `json:"uploaded"`
+}
+
 /*A JavaThreadHeader corresponds to one java thread in the threaddump.
  *
  * This javaThread only provides the information available in the

@@ -125,3 +125,23 @@ func decodeJavaThreadHeader(rows *sql.Rows) (*model.JavaThreadHeader, error) {
 
 	return &thread, nil
 }
+
+func (store *SQLiteStore) ListAllThreaddumps() ([]model.Threaddump, error) {
+	rows, err := store.db.Query("SELECT id, application, host, upload_time FROM threaddumps")
+	if err != nil {
+		log.Printf("Error with db query: %s", err)
+		return nil, err
+	}
+
+	dumps := []model.Threaddump{}
+	for rows.Next() {
+		var dump model.Threaddump
+		err := rows.Scan(&dump.ID, &dump.Application, &dump.Host, &dump.Uploaded)
+		if err != nil {
+			log.Printf("Error scanning result rows: %s", err)
+			return nil, err
+		}
+		dumps = append(dumps, dump)
+	}
+	return dumps, nil
+}
