@@ -2,9 +2,12 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/pkg/errors"
+	"github.com/tetha/threaddumpstorage-go/input"
 	"github.com/tetha/threaddumpstorage-go/model"
 )
 
@@ -144,4 +147,67 @@ func (store *SQLiteStore) ListAllThreaddumps() ([]model.Threaddump, error) {
 		dumps = append(dumps, dump)
 	}
 	return dumps, nil
+}
+
+func (store *SQLiteStore) StoreDump(application, host string, dump input.Threaddump) (string, error) {
+	tx, err := store.db.Begin()
+	if err != nil {
+		return "", err
+	}
+
+	res, err := tx.Exec("INSERT INTO threaddumps (application, host, upload_time) VALUES (?, ?, ?)", application, host, time.Now())
+	if err != nil {
+		tx.Rollback()
+		return "", errors.Wrap(err, "Unable to store threaddump header")
+	}
+	dumpID, err := res.LastInsertId()
+	if err != nil {
+		tx.Rollback()
+		return "", errors.Wrap(err, "Unable to get the ID of the dump")
+	}
+	for _, thread := range dump.Threads {
+		res, err = tx.Exec("INSERT INTO java_threads (name, java_id, is_daemon, prio, os_prio, tid, nid, native_thread_state, condition_address, java_thread_state, java_state_clarification, threaddump_id)"+
+			"VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			thread.Name, thread.ID, thread.IsDaemon, thread.Prio, thread.OsPrio, thread.Tid, thread.Nid, thread.ThreadState, thread.ConditionAddress, thread.JavaState, thread.JavaStateDetail,
+			dumpID)
+		if err != nil {
+			tx.Rollback()
+			return "", errors.Wrapf(err, "Error storing thread %v", thread)
+		}
+
+		threadIDInDB, err := res.LastInsertId()
+		if err != nil {
+			tx.Rollback()
+			return "", errors.Wrap(err, "Error getting thread id")
+		}
+
+		for idx, line := range thread.Stacktrace {
+			baseQuery := "INSERT INTO stacktrace_lines (kind, line_number, lock_address, locked_class, lock_class, java_class, java_method, source_line, source_file, java_thread_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+			switch line.Type {
+			case input.Uninitialized:
+				return "", fmt.Errorf("Uninitialized line found: %v", line)
+			case input.WaitingLine:
+				_, err = tx.Exec(baseQuery, line.Type, idx, line.LockAddress, "", line.Class, "", "", "", "", threadIDInDB)
+			case input.BlockedLine:
+				_, err = tx.Exec(baseQuery, line.Type, idx, line.LockAddress, line.Class, "", "", "", "", "", threadIDInDB)
+			case input.LockedLine:
+				_, err = tx.Exec(baseQuery, line.Type, idx, line.LockAddress, line.Class, "", "", "", "", "", threadIDInDB)
+			case input.PositionLine:
+				_, err = tx.Exec(baseQuery, line.Type, idx, "", "", "", line.Class, line.Method, line.SourceLine, line.SourceFile, threadIDInDB)
+			case input.ParkedLine:
+				_, err = tx.Exec(baseQuery, line.Type, idx, line.LockAddress, line.Class, "", "", "", "", "", threadIDInDB)
+			}
+
+			if err != nil {
+				tx.Rollback()
+				return "", errors.Wrapf(err, "Unable to store source line %v", line)
+			}
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return "", errors.Wrap(err, "Unable to commit transaction")
+	}
+	return string(dumpID), nil
 }

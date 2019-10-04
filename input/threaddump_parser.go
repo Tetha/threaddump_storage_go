@@ -6,7 +6,7 @@ func (input *Input) ParseThreaddump() (parseFailure string, result Threaddump) {
 
 	input.Mark()
 	if !input.MatchWord("Full thread dump") {
-		parseFailure = "Could not match header <Full Thread dump>"
+		parseFailure = "Could not match header <Full thread dump>"
 		input.Rollback()
 		return
 	}

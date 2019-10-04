@@ -6,7 +6,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/tetha/threaddumpstorage-go/database"
 	"github.com/tetha/threaddumpstorage-go/handlers"
-	"github.com/tetha/threaddumpstorage-go/upload"
 
 	"github.com/gorilla/mux"
 
@@ -48,11 +47,11 @@ func main() {
 	// -----------------------------
 	// Threaddump management section
 	// -----------------------------
-	r.HandleFunc("/upload", upload.HandleUpload)
+	r.HandleFunc("/upload", env.HandleUpload)
 	r.HandleFunc("/threaddumps", env.ListThreaddumps)
 
 	http.Handle("/", r)
 
-	log.Print("Serving on 8080...")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Print("Serving on 8000...")
+	log.Fatal(http.ListenAndServe(":8000", r))
 }
