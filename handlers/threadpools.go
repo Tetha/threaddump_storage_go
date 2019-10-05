@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -34,4 +35,31 @@ func (env *RuntimeEnvironment) ListThreadpools(w http.ResponseWriter, r *http.Re
 		log.Printf("Error rendering template: %s", err)
 	}
 
+}
+
+func (env *RuntimeEnvironment) ListThreadpoolsAPI(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	threaddumpID := mux.Vars(r)["dumpId"]
+	if threaddumpID == "" {
+		http.Error(w, "400: Missing threaddump id", 400)
+		return
+	}
+
+	threads, err := env.db.ListAllThreadHeadersInDump(threaddumpID)
+	if err != nil {
+		http.Error(w, "500: cannot get threads from db", 500)
+		return
+	}
+
+	detectedPools := analysis.FigureOutThreadpools(threads)
+
+	buf, err := json.Marshal(detectedPools)
+	if err != nil {
+		log.Printf("Unable to render json: %s", err)
+		http.Error(w, "500: Unable to render json", 500)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	w.Write(buf)
 }

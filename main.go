@@ -53,6 +53,9 @@ func main() {
 
 	a := r.PathPrefix("/api").Subrouter()
 	a.HandleFunc("/threaddumps", env.ListThreaddumpsAPI)
+
+	aSpecific := a.PathPrefix("/threaddump/{dumpId:[0-9]+}").Subrouter()
+	aSpecific.HandleFunc("/pools", env.ListThreadpoolsAPI)
 	http.Handle("/", r)
 
 	headersOk := gorilla_handlers.AllowedHeaders([]string{})
