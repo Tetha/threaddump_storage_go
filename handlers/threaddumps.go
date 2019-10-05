@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
@@ -21,4 +22,20 @@ func (env *RuntimeEnvironment) ListThreaddumps(w http.ResponseWriter, r *http.Re
 		log.Printf("Error rendering template: %s", err)
 		return
 	}
+}
+
+func (env *RuntimeEnvironment) ListThreaddumpsAPI(w http.ResponseWriter, r *http.Request) {
+	dumps, err := env.db.ListAllThreaddumps()
+	if err != nil {
+		log.Printf("Error getting dumps from db: %s", err)
+		http.Error(w, "500: Error getting dumps from database", 500)
+	}
+
+	out, err := json.Marshal(dumps)
+	if err != nil {
+		log.Printf("Error rendering json: %s", err)
+		http.Error(w, "500: Error rendering json", 500)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
 }

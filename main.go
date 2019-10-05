@@ -7,6 +7,7 @@ import (
 	"github.com/tetha/threaddumpstorage-go/database"
 	"github.com/tetha/threaddumpstorage-go/handlers"
 
+	gorilla_handlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
 	"net/http"
@@ -50,8 +51,13 @@ func main() {
 	r.HandleFunc("/upload", env.HandleUpload)
 	r.HandleFunc("/threaddumps", env.ListThreaddumps)
 
+	a := r.PathPrefix("/api").Subrouter()
+	a.HandleFunc("/threaddumps", env.ListThreaddumpsAPI)
 	http.Handle("/", r)
 
+	headersOk := gorilla_handlers.AllowedHeaders([]string{})
+	originsOk := gorilla_handlers.AllowedOrigins([]string{"http://127.0.0.1:8080", "http://localhost:8080"})
+	methodsOk := gorilla_handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 	log.Print("Serving on 8000...")
-	log.Fatal(http.ListenAndServe(":8000", r))
+	log.Fatal(http.ListenAndServe(":8000", gorilla_handlers.CORS(originsOk, headersOk, methodsOk)(r)))
 }
